@@ -10,11 +10,11 @@ import Combine
 
 public protocol FlowProtocol: ObservableObject {
     associatedtype S
-    associatedtype N
+    associatedtype L
     associatedtype C
     
     var sheetType: S? { get set }
-    var linkType: N? { get set }
+    var linkType: L? { get set }
     var coverType: C? { get set }
     var path: NavigationPath { get set }
     var cancellable: Set<AnyCancellable> { get set }
