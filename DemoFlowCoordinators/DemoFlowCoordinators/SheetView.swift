@@ -16,12 +16,21 @@ struct SheetView: View {
             Text("Hello, World!")
                 .navigationTitle(title)
                 .toolbar {
+#if os(macOS)
+                    ToolbarItem(placement: .principal) {
+                        Button("Close") {
+                            dismiss()
+                        }
+                    }
+#else
                     ToolbarItem(placement: .topBarLeading) {
                         Button("Close") {
                             dismiss()
                         }
                     }
+#endif
                 }
+                .padding()
         }
     }
 }

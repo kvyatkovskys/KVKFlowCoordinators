@@ -14,9 +14,11 @@ struct ContentCoordinatorView: View {
     var body: some View {
         NavigationStack(path: $coordinator.path) {
             ContentView(vm: coordinator.vm)
+#if !os(macOS)
                 .fullScreenCover(item: $coordinator.coverType, content: { (item) in
                     SheetView(title: "Cover View")
                 })
+#endif
                 .sheet(item: $coordinator.sheetType) { (item) in
                     switch item {
                     case .sheetFirst(let title):
