@@ -25,12 +25,12 @@ SwiftUI flow coordinator to control navigation in your App.
 ## Usage for SwiftUI
 - Import `KVKFlowCoordinators`.
 - Create an entities with type of navigation (for ex. `enum SheetType: FlowTypeProtocol`).
-- Create a coordinator inherit from base class `FlowCoordinator` if you want to use `.sheet`, `.navigationDestination`, `.fullScreenCover`. Or use a specific coordinator class `SheetCoordinator, LinkCoordinator, CoverCoordinator, SheetAndLinkCoordinator, SheetAndCoverCoordinator, LinkAndCoverCoordinator`.
+- Create a coordinator that inherits from the`FlowCoordinator` base class if you want to use `.sheet`, `.navigationDestination`, `.fullScreenCover`. Or use a specific coordinator class `SheetCoordinator, LinkCoordinator, CoverCoordinator, SheetAndLinkCoordinator, SheetAndCoverCoordinator, LinkAndCoverCoordinator`.
 - Create a `ViewModel` if you need.
 - Create a `CoordinatorView` with the created coordinator.
 
 
-To work with navigationLink use `.navigationDestination(for: NavigationLinkType.self)`.
+To work with navigationLink use `.navigationDestination(for: NavigationLinkType.self)`, `.navigationDestination(item: $item)` and `NavigationLink(:)` doesn't work.
 
 
 ```swift
