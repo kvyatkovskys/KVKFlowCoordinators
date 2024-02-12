@@ -36,7 +36,7 @@ extension FlowProtocol {
     }
     
     public func goToBack() {
-        if parentFlowCoordinator != nil, !(parentFlowCoordinator?.path.isEmpty ?? true) {
+        if let parentPath = parentFlowCoordinator?.path, !parentPath.isEmpty {
             parentFlowCoordinator?.path.removeLast()
         } else if !path.isEmpty {
             path.removeLast()
