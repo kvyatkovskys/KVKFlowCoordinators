@@ -96,4 +96,4 @@ struct ContentCoordinatorView: View {
 
 ## License
 
-KVKCalendar is available under the [MIT license](https://github.com/kvyatkovskys/KVKFlowCoordinators/blob/master/LICENSE.md)
+KVKFlowCoordinators is available under the [MIT license](https://github.com/kvyatkovskys/KVKFlowCoordinators/blob/master/LICENSE.md)
