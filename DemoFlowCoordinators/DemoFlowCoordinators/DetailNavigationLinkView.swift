@@ -15,7 +15,7 @@ struct DetailNavigationLinkView: View {
         Button("Go to Root") {
             coordinator.goToRoot()
         }
-        .navigationTitle(coordinator.vm.title)
+        .navigationTitle("Detail View")
     }
 }
 

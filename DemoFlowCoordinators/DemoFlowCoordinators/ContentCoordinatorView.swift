@@ -33,7 +33,7 @@ struct ContentCoordinatorView: View {
                     case .linkSecond:
                         NavigationLinkView(title: "Test Second Link")
                     case .linkSecondCoordinator:
-                        SecondContentCoordinatorView(coordinator: SecondContentCoordinator(parentCoordinator: coordinator, title: "Second Coordinator"))
+                        SecondContentCoordinatorView(coordinator: coordinator.secondContentCoordinator)
                     }
                 }
         }

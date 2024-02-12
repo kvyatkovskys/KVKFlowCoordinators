@@ -9,7 +9,7 @@ import SwiftUI
 
 struct SecondContentCoordinatorView: View {
     
-    @StateObject var coordinator: SecondContentCoordinator
+    @ObservedObject var coordinator: SecondContentCoordinator
     
     var body: some View {
         SecondContentView(vm: coordinator.vm)

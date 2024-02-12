@@ -22,7 +22,7 @@ public protocol FlowProtocol: ObservableObject {
     
     func goToRoot()
     func goToBack()
-    func goToLink(_ link: any LinkContentType)
+    func pushToLink(_ link: any LinkContentType)
 }
 
 extension FlowProtocol {
@@ -43,7 +43,7 @@ extension FlowProtocol {
         }
     }
     
-    public func goToLink(_ link: any LinkContentType) {
+    public func pushToLink(_ link: any LinkContentType) {
         if let parentFlowCoordinator {
             parentFlowCoordinator.path.append(link)
         } else {
@@ -51,6 +51,13 @@ extension FlowProtocol {
         }
     }
     
+    public func dismissSheet() {
+        sheetType = nil
+    }
+    
+    public func dismissCover() {
+        coverType = nil
+    }
 }
 
 public protocol FlowTypeProtocol: Identifiable, Hashable {}
@@ -84,7 +91,7 @@ open class FlowCoordinator<Sheet: SheetContentType, Link: LinkContentType, Cover
         $linkType
             .compactMap { $0 }
             .sink { [weak self] link in
-                self?.goToLink(link)
+                self?.pushToLink(link)
             }
             .store(in: &cancellable)
     }
@@ -128,7 +135,7 @@ open class LinkCoordinator<Link: LinkContentType>: FlowProtocol {
         $linkType
             .compactMap { $0 }
             .sink { [weak self] link in
-                self?.goToLink(link)
+                self?.pushToLink(link)
             }
             .store(in: &cancellable)
     }
@@ -172,7 +179,7 @@ open class SheetAndLinkCoordinator<Sheet: SheetContentType, Link: LinkContentTyp
         $linkType
             .compactMap { $0 }
             .sink { [weak self] link in
-                self?.goToLink(link)
+                self?.pushToLink(link)
             }
             .store(in: &cancellable)
     }
@@ -211,7 +218,7 @@ open class LinkAndCoverCoordinator<Link: LinkContentType, Cover: CoverContentTyp
         $linkType
             .compactMap { $0 }
             .sink { [weak self] link in
-                self?.goToLink(link)
+                self?.pushToLink(link)
             }
             .store(in: &cancellable)
     }

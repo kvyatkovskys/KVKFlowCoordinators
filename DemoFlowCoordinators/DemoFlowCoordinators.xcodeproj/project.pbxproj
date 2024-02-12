@@ -116,6 +116,7 @@
 				F952C5942B79136500CA0308 /* DemoFlowCoordinators.entitlements */,
 				F952C5562B790E4600CA0308 /* Assets.xcassets */,
 				F952C5582B790E4600CA0308 /* Preview Content */,
+				F952C5872B79104D00CA0308 /* DemoFlowCoordinatorsApp.swift */,
 				F952C57F2B790EEC00CA0308 /* ContentView.swift */,
 				F952C5832B79100200CA0308 /* ContentCoordinatorView.swift */,
 				F952C5812B790F0600CA0308 /* ContentViewModel.swift */,
@@ -123,7 +124,6 @@
 				F952C5852B79101B00CA0308 /* DetailNavigationLinkView.swift */,
 				F952C58D2B79109900CA0308 /* SecondContentCoordinatorView.swift */,
 				F952C58B2B79108500CA0308 /* SecondContentViewModel.swift */,
-				F952C5872B79104D00CA0308 /* DemoFlowCoordinatorsApp.swift */,
 				F952C5892B79106200CA0308 /* SheetView.swift */,
 			);
 			path = DemoFlowCoordinators;

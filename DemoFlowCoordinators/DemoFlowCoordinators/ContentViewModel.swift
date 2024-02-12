@@ -10,10 +10,12 @@ import KVKFlowCoordinators
 
 final class ContentCoordinator: FlowCoordinator<ContentViewModel.SheetType, ContentViewModel.LinkType, ContentViewModel.CoverType> {
     @Published var vm: ContentViewModel!
+    private(set) var secondContentCoordinator: SecondContentCoordinator!
     
     init() {
         super.init()
         vm = ContentViewModel(coordinator: self)
+        secondContentCoordinator = SecondContentCoordinator(parentCoordinator: self, title: "Second Coordinator")
     }
 }
 
@@ -38,11 +40,16 @@ final class ContentViewModel: ObservableObject {
         coordinator.linkType = .linkThirdWithParams("Third Link View")
     }
     
-    func openSheetFirst() {
+    func openSheetFirst(autoClose: Bool) {
         coordinator.sheetType = .sheetFirst("Sheet First")
+        if autoClose {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                self.coordinator.dismissSheet()
+            }
+        }
     }
     
-    func openDetailWithGoToRoot() {
+    func openComplexLink() {
         coordinator.linkType = .linkSecondCoordinator
     }
     

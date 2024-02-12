@@ -23,7 +23,10 @@ struct ContentView: View {
                 .foregroundStyle(.tint)
             Text("Hello, world!")
             Button("Open Sheet") {
-                vm.openSheetFirst()
+                vm.openSheetFirst(autoClose: false)
+            }
+            Button("Open Auto Close Sheet") {
+                vm.openSheetFirst(autoClose: true)
             }
             Button("Open Cover") {
                 vm.openCoverFirst()
@@ -31,14 +34,8 @@ struct ContentView: View {
             Button("Open Link First") {
                 vm.openFirstLink()
             }
-            Button("Open Link Second") {
-                vm.openSecondLink()
-            }
-            Button("Open Link Third") {
-                vm.openThirdLink()
-            }
             Button("Open Complex Link") {
-                vm.openDetailWithGoToRoot()
+                vm.openComplexLink()
             }
         }
         .padding()
