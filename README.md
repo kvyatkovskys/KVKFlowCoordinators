@@ -46,18 +46,6 @@ final class ContentCoordinator: FlowCoordinator<ContentViewModel.SheetType, Cont
     }
 }
 
-final class ContentViewModel: ObservableObject {    
-    private let coordinator: ContentCoordinator
-    
-    init(coordinator: ContentCoordinator) {
-        self.coordinator = coordinator
-    }
-    
-    func openFirstLink() {
-        coordinator.linkType = .linkFirstWithParams("First Link View")
-    }
-}
-
 struct ContentCoordinatorView: View {
     @StateObject private var coordinator = ContentCoordinator()
     
@@ -85,18 +73,24 @@ struct ContentCoordinatorView: View {
                 }
         }
     }
+}
+
+final class ContentViewModel: ObservableObject {    
+    private let coordinator: ContentCoordinator
     
+    init(coordinator: ContentCoordinator) {
+        self.coordinator = coordinator
+    }
+    
+    func openFirstLink() {
+        coordinator.linkType = .linkFirstWithParams("First Link View")
+    }
 }
 
 struct ContentView: View {
     @ObservedObject var vm: ContentViewModel
     
     var body: some View {
-       bodyView
-            .navigationTitle(vm.title)
-    }
-    
-    private var bodyView: some View {
         VStack(spacing: 30) {
             Image(systemName: "globe")
                 .imageScale(.large)

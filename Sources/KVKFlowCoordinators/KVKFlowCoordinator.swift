@@ -20,14 +20,29 @@ public protocol FlowProtocol: ObservableObject {
     var cancellable: Set<AnyCancellable> { get set }
     var parentFlowCoordinator: (any FlowProtocol)? { get set }
     
-    func goToRoot()
-    func goToBack()
-    func pushToLink(_ link: any FlowTypeProtocol)
+    func popToRoot()
+    func popView()
+    func pushTo(_ link: any FlowTypeProtocol)
 }
 
 extension FlowProtocol {
     
+    @available(swift, obsoleted: 0.1.1, renamed: "popToRoot")
     public func goToRoot() {
+        popToRoot()
+    }
+    
+    @available(swift, obsoleted: 0.1.1, renamed: "pop")
+    public func goToBack() {
+        popView()
+    }
+    
+    @available(swift, obsoleted: 0.1.1, renamed: "pushTo")
+    public func pushToLink(_ link: any FlowTypeProtocol) {
+        pushTo(link)
+    }
+    
+    public func popToRoot() {
         if let parentFlowCoordinator {
             parentFlowCoordinator.path = NavigationPath()
         } else {
@@ -35,7 +50,7 @@ extension FlowProtocol {
         }
     }
     
-    public func goToBack() {
+    public func popView() {
         if let parentPath = parentFlowCoordinator?.path, !parentPath.isEmpty {
             parentFlowCoordinator?.path.removeLast()
         } else if !path.isEmpty {
@@ -43,7 +58,7 @@ extension FlowProtocol {
         }
     }
     
-    public func pushToLink(_ link: any FlowTypeProtocol) {
+    public func pushTo(_ link: any FlowTypeProtocol) {
         if let parentFlowCoordinator {
             parentFlowCoordinator.path.append(link)
         } else {
@@ -87,7 +102,7 @@ open class FlowCoordinator<Sheet: FlowTypeProtocol, Link: FlowTypeProtocol, Cove
         $linkType
             .compactMap { $0 }
             .sink { [weak self] link in
-                self?.pushToLink(link)
+                self?.pushTo(link)
             }
             .store(in: &cancellable)
     }
@@ -131,7 +146,7 @@ open class LinkCoordinator<Link: FlowTypeProtocol>: FlowProtocol {
         $linkType
             .compactMap { $0 }
             .sink { [weak self] link in
-                self?.pushToLink(link)
+                self?.pushTo(link)
             }
             .store(in: &cancellable)
     }
@@ -175,7 +190,7 @@ open class SheetAndLinkCoordinator<Sheet: FlowTypeProtocol, Link: FlowTypeProtoc
         $linkType
             .compactMap { $0 }
             .sink { [weak self] link in
-                self?.pushToLink(link)
+                self?.pushTo(link)
             }
             .store(in: &cancellable)
     }
@@ -214,7 +229,7 @@ open class LinkAndCoverCoordinator<Link: FlowTypeProtocol, Cover: FlowTypeProtoc
         $linkType
             .compactMap { $0 }
             .sink { [weak self] link in
-                self?.pushToLink(link)
+                self?.pushTo(link)
             }
             .store(in: &cancellable)
     }

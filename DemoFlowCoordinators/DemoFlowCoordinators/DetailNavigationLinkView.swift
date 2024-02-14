@@ -13,7 +13,7 @@ struct DetailNavigationLinkView: View {
     
     var body: some View {
         Button("Go to Root") {
-            coordinator.goToRoot()
+            coordinator.popToRoot()
         }
         .navigationTitle("Detail View")
     }
