@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct ContentView: View {
-    
     @ObservedObject var vm: ContentViewModel
     
     var body: some View {
@@ -31,12 +30,14 @@ struct ContentView: View {
             Button("Open Cover") {
                 vm.openCoverFirst()
             }
-            Button("Open Link First") {
+            Button("Open Link") {
                 vm.openFirstLink()
             }
-            Button("Open Complex Link") {
+            Button("Complex Btn Link") {
                 vm.openComplexLink()
             }
+            NavigationLink("Complex Nav Link",
+                           value: ContentViewModel.LinkType.linkSecondCoordinator)
         }
         .padding()
     }

@@ -20,14 +20,29 @@ public protocol FlowProtocol: ObservableObject {
     var cancellable: Set<AnyCancellable> { get set }
     var parentFlowCoordinator: (any FlowProtocol)? { get set }
     
-    func goToRoot()
-    func goToBack()
-    func pushToLink(_ link: any LinkContentType)
+    func popToRoot()
+    func popView()
+    func pushTo(_ link: any FlowTypeProtocol)
 }
 
 extension FlowProtocol {
     
+    @available(swift, obsoleted: 0.1.1, renamed: "popToRoot")
     public func goToRoot() {
+        popToRoot()
+    }
+    
+    @available(swift, obsoleted: 0.1.1, renamed: "pop")
+    public func goToBack() {
+        popView()
+    }
+    
+    @available(swift, obsoleted: 0.1.1, renamed: "pushTo")
+    public func pushToLink(_ link: any FlowTypeProtocol) {
+        pushTo(link)
+    }
+    
+    public func popToRoot() {
         if let parentFlowCoordinator {
             parentFlowCoordinator.path = NavigationPath()
         } else {
@@ -35,7 +50,7 @@ extension FlowProtocol {
         }
     }
     
-    public func goToBack() {
+    public func popView() {
         if let parentPath = parentFlowCoordinator?.path, !parentPath.isEmpty {
             parentFlowCoordinator?.path.removeLast()
         } else if !path.isEmpty {
@@ -43,7 +58,7 @@ extension FlowProtocol {
         }
     }
     
-    public func pushToLink(_ link: any LinkContentType) {
+    public func pushTo(_ link: any FlowTypeProtocol) {
         if let parentFlowCoordinator {
             parentFlowCoordinator.path.append(link)
         } else {
@@ -70,11 +85,7 @@ public struct FlowEmptyType: FlowTypeProtocol {
     }
 }
 
-public typealias SheetContentType = Identifiable & Hashable
-public typealias LinkContentType = Identifiable & Hashable
-public typealias CoverContentType = Identifiable & Hashable
-
-open class FlowCoordinator<Sheet: SheetContentType, Link: LinkContentType, Cover: CoverContentType>: FlowProtocol {
+open class FlowCoordinator<Sheet: FlowTypeProtocol, Link: FlowTypeProtocol, Cover: FlowTypeProtocol>: FlowProtocol {
     public typealias S = Sheet
     public typealias N = Link
     public typealias C = Cover
@@ -91,7 +102,7 @@ open class FlowCoordinator<Sheet: SheetContentType, Link: LinkContentType, Cover
         $linkType
             .compactMap { $0 }
             .sink { [weak self] link in
-                self?.pushToLink(link)
+                self?.pushTo(link)
             }
             .store(in: &cancellable)
     }
@@ -101,7 +112,7 @@ open class FlowCoordinator<Sheet: SheetContentType, Link: LinkContentType, Cover
     }
 }
 
-open class SheetCoordinator<Sheet: SheetContentType>: FlowProtocol {
+open class SheetCoordinator<Sheet: FlowTypeProtocol>: FlowProtocol {
     public typealias S = Sheet
     public typealias N = FlowEmptyType
     public typealias C = FlowEmptyType
@@ -118,7 +129,7 @@ open class SheetCoordinator<Sheet: SheetContentType>: FlowProtocol {
     }
 }
 
-open class LinkCoordinator<Link: LinkContentType>: FlowProtocol {
+open class LinkCoordinator<Link: FlowTypeProtocol>: FlowProtocol {
     public typealias S = FlowEmptyType
     public typealias N = Link
     public typealias C = FlowEmptyType
@@ -135,7 +146,7 @@ open class LinkCoordinator<Link: LinkContentType>: FlowProtocol {
         $linkType
             .compactMap { $0 }
             .sink { [weak self] link in
-                self?.pushToLink(link)
+                self?.pushTo(link)
             }
             .store(in: &cancellable)
     }
@@ -145,7 +156,7 @@ open class LinkCoordinator<Link: LinkContentType>: FlowProtocol {
     }
 }
 
-open class CoverCoordinator<Cover: CoverContentType>: FlowProtocol {
+open class CoverCoordinator<Cover: FlowTypeProtocol>: FlowProtocol {
     public typealias S = FlowEmptyType
     public typealias N = FlowEmptyType
     public typealias C = Cover
@@ -162,7 +173,7 @@ open class CoverCoordinator<Cover: CoverContentType>: FlowProtocol {
     }
 }
 
-open class SheetAndLinkCoordinator<Sheet: SheetContentType, Link: LinkContentType>: FlowProtocol {
+open class SheetAndLinkCoordinator<Sheet: FlowTypeProtocol, Link: FlowTypeProtocol>: FlowProtocol {
     public typealias S = Sheet
     public typealias N = Link
     public typealias C = FlowEmptyType
@@ -179,7 +190,7 @@ open class SheetAndLinkCoordinator<Sheet: SheetContentType, Link: LinkContentTyp
         $linkType
             .compactMap { $0 }
             .sink { [weak self] link in
-                self?.pushToLink(link)
+                self?.pushTo(link)
             }
             .store(in: &cancellable)
     }
@@ -189,7 +200,7 @@ open class SheetAndLinkCoordinator<Sheet: SheetContentType, Link: LinkContentTyp
     }
 }
 
-open class SheetAndCoverCoordinator<Sheet: SheetContentType, Cover: CoverContentType>: FlowProtocol {
+open class SheetAndCoverCoordinator<Sheet: FlowTypeProtocol, Cover: FlowTypeProtocol>: FlowProtocol {
     public typealias S = Sheet
     public typealias N = FlowEmptyType
     public typealias C = Cover
@@ -202,7 +213,7 @@ open class SheetAndCoverCoordinator<Sheet: SheetContentType, Cover: CoverContent
     public var parentFlowCoordinator: (any FlowProtocol)?
 }
 
-open class LinkAndCoverCoordinator<Link: LinkContentType, Cover: CoverContentType>: FlowProtocol {
+open class LinkAndCoverCoordinator<Link: FlowTypeProtocol, Cover: FlowTypeProtocol>: FlowProtocol {
     public typealias S = FlowEmptyType
     public typealias N = Link
     public typealias C = Cover
@@ -218,7 +229,7 @@ open class LinkAndCoverCoordinator<Link: LinkContentType, Cover: CoverContentTyp
         $linkType
             .compactMap { $0 }
             .sink { [weak self] link in
-                self?.pushToLink(link)
+                self?.pushTo(link)
             }
             .store(in: &cancellable)
     }

@@ -28,8 +28,8 @@ final class SecondContentViewModel: ObservableObject {
         self.title = title
     }
     
-    func goToBack() {
-        coordinator.goToBack()
+    func popView() {
+        coordinator.popView()
     }
     
     func openDetail() {

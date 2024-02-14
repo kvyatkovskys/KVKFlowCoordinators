@@ -30,7 +30,7 @@ SwiftUI flow coordinator to control navigation in your App.
 - Create a `CoordinatorView` with the created coordinator.
 
 
-To work with navigationLink use `.navigationDestination(for: NavigationLinkType.self)`, `.navigationDestination(item: $item)` and `NavigationLink(:)` doesn't work.
+To work with navigationLink use `.navigationDestination(for: NavigationLinkType.self)`. The `.navigationDestination(item: $item)` doesn't work.
 
 
 ```swift
@@ -46,20 +46,7 @@ final class ContentCoordinator: FlowCoordinator<ContentViewModel.SheetType, Cont
     }
 }
 
-final class ContentViewModel: ObservableObject {    
-    private let coordinator: ContentCoordinator
-    
-    init(coordinator: ContentCoordinator) {
-        self.coordinator = coordinator
-    }
-    
-    func openFirstLink() {
-        coordinator.linkType = .linkFirstWithParams("First Link View")
-    }
-}
-
 struct ContentCoordinatorView: View {
-    
     @StateObject private var coordinator = ContentCoordinator()
     
     var body: some View {
@@ -86,7 +73,49 @@ struct ContentCoordinatorView: View {
                 }
         }
     }
+}
+
+final class ContentViewModel: ObservableObject {    
+    private let coordinator: ContentCoordinator
     
+    init(coordinator: ContentCoordinator) {
+        self.coordinator = coordinator
+    }
+    
+    func openFirstLink() {
+        coordinator.linkType = .linkFirstWithParams("First Link View")
+    }
+}
+
+struct ContentView: View {
+    @ObservedObject var vm: ContentViewModel
+    
+    var body: some View {
+        VStack(spacing: 30) {
+            Image(systemName: "globe")
+                .imageScale(.large)
+                .foregroundStyle(.tint)
+            Text("Hello, world!")
+            Button("Open Sheet") {
+                vm.openSheetFirst(autoClose: false)
+            }
+            Button("Open Auto Close Sheet") {
+                vm.openSheetFirst(autoClose: true)
+            }
+            Button("Open Cover") {
+                vm.openCoverFirst()
+            }
+            Button("Open Link First") {
+                vm.openFirstLink()
+            }
+            Button("Open Complex Btn Link") {
+                vm.openComplexLink()
+            }
+            NavigationLink("Open Complex Nav Link",
+                           value: ContentViewModel.LinkType.linkSecondCoordinator)
+        }
+        .padding()
+    }
 }
 ```
 

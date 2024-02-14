@@ -48,8 +48,8 @@ struct SecondContentView: View {
     
     var body: some View {
         VStack(spacing: 30) {
-            Button("Go to Back") {
-                vm.goToBack()
+            Button("Pop View") {
+                vm.popView()
             }
             Button("Open Detail") {
                 vm.openDetail()
