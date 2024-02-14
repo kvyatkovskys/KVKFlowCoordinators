@@ -22,7 +22,7 @@ public protocol FlowProtocol: ObservableObject {
     
     func goToRoot()
     func goToBack()
-    func pushToLink(_ link: any LinkContentType)
+    func pushToLink(_ link: any FlowTypeProtocol)
 }
 
 extension FlowProtocol {
@@ -43,7 +43,7 @@ extension FlowProtocol {
         }
     }
     
-    public func pushToLink(_ link: any LinkContentType) {
+    public func pushToLink(_ link: any FlowTypeProtocol) {
         if let parentFlowCoordinator {
             parentFlowCoordinator.path.append(link)
         } else {
@@ -70,11 +70,7 @@ public struct FlowEmptyType: FlowTypeProtocol {
     }
 }
 
-public typealias SheetContentType = Identifiable & Hashable
-public typealias LinkContentType = Identifiable & Hashable
-public typealias CoverContentType = Identifiable & Hashable
-
-open class FlowCoordinator<Sheet: SheetContentType, Link: LinkContentType, Cover: CoverContentType>: FlowProtocol {
+open class FlowCoordinator<Sheet: FlowTypeProtocol, Link: FlowTypeProtocol, Cover: FlowTypeProtocol>: FlowProtocol {
     public typealias S = Sheet
     public typealias N = Link
     public typealias C = Cover
@@ -101,7 +97,7 @@ open class FlowCoordinator<Sheet: SheetContentType, Link: LinkContentType, Cover
     }
 }
 
-open class SheetCoordinator<Sheet: SheetContentType>: FlowProtocol {
+open class SheetCoordinator<Sheet: FlowTypeProtocol>: FlowProtocol {
     public typealias S = Sheet
     public typealias N = FlowEmptyType
     public typealias C = FlowEmptyType
@@ -118,7 +114,7 @@ open class SheetCoordinator<Sheet: SheetContentType>: FlowProtocol {
     }
 }
 
-open class LinkCoordinator<Link: LinkContentType>: FlowProtocol {
+open class LinkCoordinator<Link: FlowTypeProtocol>: FlowProtocol {
     public typealias S = FlowEmptyType
     public typealias N = Link
     public typealias C = FlowEmptyType
@@ -145,7 +141,7 @@ open class LinkCoordinator<Link: LinkContentType>: FlowProtocol {
     }
 }
 
-open class CoverCoordinator<Cover: CoverContentType>: FlowProtocol {
+open class CoverCoordinator<Cover: FlowTypeProtocol>: FlowProtocol {
     public typealias S = FlowEmptyType
     public typealias N = FlowEmptyType
     public typealias C = Cover
@@ -162,7 +158,7 @@ open class CoverCoordinator<Cover: CoverContentType>: FlowProtocol {
     }
 }
 
-open class SheetAndLinkCoordinator<Sheet: SheetContentType, Link: LinkContentType>: FlowProtocol {
+open class SheetAndLinkCoordinator<Sheet: FlowTypeProtocol, Link: FlowTypeProtocol>: FlowProtocol {
     public typealias S = Sheet
     public typealias N = Link
     public typealias C = FlowEmptyType
@@ -189,7 +185,7 @@ open class SheetAndLinkCoordinator<Sheet: SheetContentType, Link: LinkContentTyp
     }
 }
 
-open class SheetAndCoverCoordinator<Sheet: SheetContentType, Cover: CoverContentType>: FlowProtocol {
+open class SheetAndCoverCoordinator<Sheet: FlowTypeProtocol, Cover: FlowTypeProtocol>: FlowProtocol {
     public typealias S = Sheet
     public typealias N = FlowEmptyType
     public typealias C = Cover
@@ -202,7 +198,7 @@ open class SheetAndCoverCoordinator<Sheet: SheetContentType, Cover: CoverContent
     public var parentFlowCoordinator: (any FlowProtocol)?
 }
 
-open class LinkAndCoverCoordinator<Link: LinkContentType, Cover: CoverContentType>: FlowProtocol {
+open class LinkAndCoverCoordinator<Link: FlowTypeProtocol, Cover: FlowTypeProtocol>: FlowProtocol {
     public typealias S = FlowEmptyType
     public typealias N = Link
     public typealias C = Cover
