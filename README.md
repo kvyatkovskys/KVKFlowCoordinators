@@ -20,6 +20,7 @@ pod 'KVKFlowCoordinators'
 ~~~
 
 [Adding Pods to an Xcode project](https://guides.cocoapods.org/using/using-cocoapods.html)
+
 ### Swift Package Manager (Xcode 12 or higher)
 
 1. In Xcode navigate to **File** → **Swift Packages** → **Add Package Dependency...**
