@@ -22,7 +22,7 @@ public protocol FlowProtocol: ObservableObject {
     
     func popToRoot()
     func popView()
-    func pushTo(_ link: any FlowTypeProtocol)
+    func pushTo(_ link: L)
 }
 
 extension FlowProtocol {
@@ -38,7 +38,7 @@ extension FlowProtocol {
     }
     
     @available(swift, obsoleted: 0.1.1, renamed: "pushTo")
-    public func pushToLink(_ link: any FlowTypeProtocol) {
+    public func pushToLink<L: Hashable>(_ link: L) {
         pushTo(link)
     }
     
@@ -58,7 +58,7 @@ extension FlowProtocol {
         }
     }
     
-    public func pushTo(_ link: any FlowTypeProtocol) {
+    public func pushTo<L: Hashable>(_ link: L) {
         if let parentFlowCoordinator {
             parentFlowCoordinator.path.append(link)
         } else {
@@ -73,168 +73,68 @@ extension FlowProtocol {
     public func dismissCover() {
         coverType = nil
     }
+    
+    // MARK: Internal-
+    func removeObservers() {
+        cancellable.removeAll()
+    }
+}
+
+open class FlowBaseCoordinator<Sheet: FlowTypeProtocol, Link: FlowTypeProtocol, Cover: FlowTypeProtocol>: FlowProtocol {
+    
+    public typealias S = Sheet
+    public typealias L = Link
+    public typealias C = Cover
+    
+    @Published public var sheetType: Sheet?
+    @Published public var linkType: Link?
+    @Published public var coverType: Cover?
+    @Published public var path = NavigationPath()
+    public var cancellable = Set<AnyCancellable>()
+    public var parentFlowCoordinator: (any FlowProtocol)?
+    
+    public init(parentFlowCoordinator: (any FlowProtocol)? = nil) {
+        self.parentFlowCoordinator = parentFlowCoordinator
+        $linkType
+            .compactMap { $0 }
+            .sink { [weak self] link in
+                self?.pushTo(link)
+            }
+            .store(in: &cancellable)
+    }
+    
+    deinit {
+        removeObservers()
+    }
 }
 
 public protocol FlowTypeProtocol: Identifiable, Hashable {}
 
 /// stab for child coordinators
 /// - class Coordinator: FlowCoordinator<SheetType, **FlowEmptyType**, CoverType>
-public struct FlowEmptyType: FlowTypeProtocol {
+public enum FlowEmptyType: FlowTypeProtocol {
     public var id: Int {
         0
     }
 }
 
-open class FlowCoordinator<Sheet: FlowTypeProtocol, Link: FlowTypeProtocol, Cover: FlowTypeProtocol>: FlowProtocol {
-    public typealias S = Sheet
-    public typealias N = Link
-    public typealias C = Cover
-    
-    @Published public var sheetType: Sheet?
-    @Published public var linkType: Link?
-    @Published public var coverType: Cover?
-    @Published public var path = NavigationPath()
-    public var cancellable = Set<AnyCancellable>()
-    public var parentFlowCoordinator: (any FlowProtocol)?
-    
-    public init(parentFlowCoordinator: (any FlowProtocol)? = nil) {
-        self.parentFlowCoordinator = parentFlowCoordinator
-        $linkType
-            .compactMap { $0 }
-            .sink { [weak self] link in
-                self?.pushTo(link)
-            }
-            .store(in: &cancellable)
-    }
-    
-    deinit {
-        cancellable.removeAll()
-    }
-}
+/// To contol all navigation types
+open class FlowCoordinator<Sheet: FlowTypeProtocol, Link: FlowTypeProtocol, Cover: FlowTypeProtocol>: FlowBaseCoordinator<Sheet, Link, Cover> {}
 
-open class SheetCoordinator<Sheet: FlowTypeProtocol>: FlowProtocol {
-    public typealias S = Sheet
-    public typealias N = FlowEmptyType
-    public typealias C = FlowEmptyType
-    
-    @Published public var sheetType: Sheet?
-    @Published public var linkType: FlowEmptyType?
-    @Published public var coverType: FlowEmptyType?
-    @Published public var path = NavigationPath()
-    public var cancellable = Set<AnyCancellable>()
-    public var parentFlowCoordinator: (any FlowProtocol)?
-    
-    public init(parentFlowCoordinator: (any FlowProtocol)? = nil) {
-        self.parentFlowCoordinator = parentFlowCoordinator
-    }
-}
+/// To contol sheet navigation
+open class SheetCoordinator<Sheet: FlowTypeProtocol>: FlowBaseCoordinator<Sheet, FlowEmptyType, FlowEmptyType> {}
 
-open class LinkCoordinator<Link: FlowTypeProtocol>: FlowProtocol {
-    public typealias S = FlowEmptyType
-    public typealias N = Link
-    public typealias C = FlowEmptyType
-    
-    @Published public var sheetType: FlowEmptyType?
-    @Published public var linkType: Link?
-    @Published public var coverType: FlowEmptyType?
-    @Published public var path = NavigationPath()
-    public var cancellable = Set<AnyCancellable>()
-    public var parentFlowCoordinator: (any FlowProtocol)?
-    
-    public init(parentFlowCoordinator: (any FlowProtocol)? = nil) {
-        self.parentFlowCoordinator = parentFlowCoordinator
-        $linkType
-            .compactMap { $0 }
-            .sink { [weak self] link in
-                self?.pushTo(link)
-            }
-            .store(in: &cancellable)
-    }
-    
-    deinit {
-        cancellable.removeAll()
-    }
-}
+/// To contol link navigation
+open class LinkCoordinator<Link: FlowTypeProtocol>: FlowBaseCoordinator<FlowEmptyType, Link, FlowEmptyType> {}
 
-open class CoverCoordinator<Cover: FlowTypeProtocol>: FlowProtocol {
-    public typealias S = FlowEmptyType
-    public typealias N = FlowEmptyType
-    public typealias C = Cover
-    
-    @Published public var sheetType: FlowEmptyType?
-    @Published public var linkType: FlowEmptyType?
-    @Published public var coverType: Cover?
-    @Published public var path = NavigationPath()
-    public var cancellable = Set<AnyCancellable>()
-    public var parentFlowCoordinator: (any FlowProtocol)?
-    
-    public init(parentFlowCoordinator: (any FlowProtocol)? = nil) {
-        self.parentFlowCoordinator = parentFlowCoordinator
-    }
-}
+/// To contol cover navigation
+open class CoverCoordinator<Cover: FlowTypeProtocol>: FlowBaseCoordinator<FlowEmptyType, FlowEmptyType, Cover> {}
 
-open class SheetAndLinkCoordinator<Sheet: FlowTypeProtocol, Link: FlowTypeProtocol>: FlowProtocol {
-    public typealias S = Sheet
-    public typealias N = Link
-    public typealias C = FlowEmptyType
-    
-    @Published public var sheetType: Sheet?
-    @Published public var linkType: Link?
-    @Published public var coverType: FlowEmptyType?
-    @Published public var path = NavigationPath()
-    public var cancellable = Set<AnyCancellable>()
-    public var parentFlowCoordinator: (any FlowProtocol)?
-    
-    public init(parentFlowCoordinator: (any FlowProtocol)? = nil) {
-        self.parentFlowCoordinator = parentFlowCoordinator
-        $linkType
-            .compactMap { $0 }
-            .sink { [weak self] link in
-                self?.pushTo(link)
-            }
-            .store(in: &cancellable)
-    }
-    
-    deinit {
-        cancellable.removeAll()
-    }
-}
+/// To contol sheet and link navigation types
+open class SheetAndLinkCoordinator<Sheet: FlowTypeProtocol, Link: FlowTypeProtocol>: FlowBaseCoordinator<Sheet, Link, FlowEmptyType> {}
 
-open class SheetAndCoverCoordinator<Sheet: FlowTypeProtocol, Cover: FlowTypeProtocol>: FlowProtocol {
-    public typealias S = Sheet
-    public typealias N = FlowEmptyType
-    public typealias C = Cover
-    
-    @Published public var sheetType: Sheet?
-    @Published public var linkType: FlowEmptyType?
-    @Published public var coverType: Cover?
-    @Published public var path = NavigationPath()
-    public var cancellable = Set<AnyCancellable>()
-    public var parentFlowCoordinator: (any FlowProtocol)?
-}
+/// To contol shent and cover navigation
+open class SheetAndCoverCoordinator<Sheet: FlowTypeProtocol, Cover: FlowTypeProtocol>: FlowBaseCoordinator<Sheet, FlowEmptyType, Cover> {}
 
-open class LinkAndCoverCoordinator<Link: FlowTypeProtocol, Cover: FlowTypeProtocol>: FlowProtocol {
-    public typealias S = FlowEmptyType
-    public typealias N = Link
-    public typealias C = Cover
-    
-    @Published public var sheetType: FlowEmptyType?
-    @Published public var linkType: Link?
-    @Published public var coverType: Cover?
-    @Published public var path = NavigationPath()
-    public var cancellable = Set<AnyCancellable>()
-    public var parentFlowCoordinator: (any FlowProtocol)?
-    
-    public init() {
-        $linkType
-            .compactMap { $0 }
-            .sink { [weak self] link in
-                self?.pushTo(link)
-            }
-            .store(in: &cancellable)
-    }
-    
-    deinit {
-        cancellable.removeAll()
-    }
-}
+/// To contol link and cover navigation
+open class LinkAndCoverCoordinator<Link: FlowTypeProtocol, Cover: FlowTypeProtocol>: FlowBaseCoordinator<FlowEmptyType, Link, Cover> {}
