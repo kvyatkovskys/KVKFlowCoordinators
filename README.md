@@ -1,7 +1,6 @@
 [![SwiftPM compatible](https://img.shields.io/badge/SwiftPM-compatible-orange.svg)](https://swiftpackageindex.com/kvyatkovskys/KVKFlowCoordinators)
 [![License](https://img.shields.io/cocoapods/l/KVKCalendar.svg?style=flat)](https://cocoapods.org/pods/KVKFlowCoordinators)
 
-
 # KVKFlowCoordinators
 SwiftUI flow coordinator to control navigation in your App.
 
@@ -34,12 +33,14 @@ pod 'KVKFlowCoordinators'
 ## Usage for SwiftUI
 - Import `KVKFlowCoordinators`.
 - Create an entities with type of navigation (for ex. `enum SheetType: FlowTypeProtocol`).
-- Create a coordinator that inherits from the`FlowCoordinator` base class if you want to use `.sheet`, `.navigationDestination`, `.fullScreenCover`. Or use a specific coordinator class `SheetCoordinator, LinkCoordinator, CoverCoordinator, SheetAndLinkCoordinator, SheetAndCoverCoordinator, LinkAndCoverCoordinator`.
+- Create a coordinator that inherits from the`FlowCoordinator` base class if you want to use `.sheet`, `.navigationDestination`, `.fullScreenCover`.
+- Or use a specific coordinator class `SheetCoordinator, LinkCoordinator, CoverCoordinator, SheetAndLinkCoordinator, SheetAndCoverCoordinator, LinkAndCoverCoordinator`.
 - Create a `ViewModel` if you need.
 - Create a `CoordinatorView` with the created coordinator.
 
 
-To work with navigationLink use `.navigationDestination(for: NavigationLinkType.self)`. The `.navigationDestination(item: $item)` doesn't work.
+To work with navigationLink use `.navigationDestination(for: NavigationLinkType.self)`.
+_`.navigationDestination(item: $item)` doesn't work._
 
 
 ```swift
@@ -101,10 +102,6 @@ struct ContentView: View {
     
     var body: some View {
         VStack(spacing: 30) {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
             Button("Open Sheet") {
                 vm.openSheetFirst(autoClose: false)
             }
@@ -128,10 +125,13 @@ struct ContentView: View {
 }
 ```
 
+## Demo
+https://github.com/kvyatkovskys/KVKFlowCoordinators/assets/8233076/4f4bd26b-8103-41a4-94ff-a9e25249bd02
+
 ## Author
 
 [Sergei Kviatkovskii](https://github.com/kvyatkovskys)
 
 ## License
 
-KVKFlowCoordinators is available under the [MIT license](https://github.com/kvyatkovskys/KVKFlowCoordinators/blob/master/LICENSE.md)
+KVKFlowCoordinators is available under the [MIT license](https://github.com/kvyatkovskys/KVKFlowCoordinators/blob/master/LICENSE)

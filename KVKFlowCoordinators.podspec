@@ -1,7 +1,7 @@
 Pod::Spec.new do |spec|
 
   spec.name         = "KVKFlowCoordinators"
-  spec.version      = "0.1.2"
+  spec.version      = "0.1.3"
   spec.summary      = "SwiftUI flow coordinators"
   spec.description  = <<-DESC
   SwiftUI flow coordinator to control navigation in your App.
