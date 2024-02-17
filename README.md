@@ -1,7 +1,6 @@
 [![SwiftPM compatible](https://img.shields.io/badge/SwiftPM-compatible-orange.svg)](https://swiftpackageindex.com/kvyatkovskys/KVKFlowCoordinators)
 [![License](https://img.shields.io/cocoapods/l/KVKCalendar.svg?style=flat)](https://cocoapods.org/pods/KVKFlowCoordinators)
 
-
 # KVKFlowCoordinators
 SwiftUI flow coordinator to control navigation in your App.
 
@@ -125,6 +124,9 @@ struct ContentView: View {
     }
 }
 ```
+
+## Demo
+https://github.com/kvyatkovskys/KVKFlowCoordinators/assets/8233076/4f4bd26b-8103-41a4-94ff-a9e25249bd02
 
 ## Author
 
