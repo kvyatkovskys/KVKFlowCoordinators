@@ -6,12 +6,13 @@
 //
 
 import SwiftUI
+import KVKFlowCoordinators
 
 struct ContentCoordinatorView: View {
     @StateObject private var coordinator = ContentCoordinator()
     
     var body: some View {
-        NavigationStack(path: $coordinator.path) {
+        FlowCoordinatorView(coordinator) {
             ContentView(vm: coordinator.vm)
 #if !os(macOS)
                 .fullScreenCover(item: $coordinator.coverType, content: { (item) in
@@ -32,6 +33,8 @@ struct ContentCoordinatorView: View {
                     case .linkSecond:
                         NavigationLinkView(title: "Test Second Link")
                     case .linkSecondCoordinator:
+                        SecondContentCoordinatorView(coordinator: coordinator.secondContentCoordinator)
+                    case .linkSecondCoordinator2:
                         SecondContentCoordinatorView(coordinator: coordinator.secondContentCoordinator)
                     }
                 }

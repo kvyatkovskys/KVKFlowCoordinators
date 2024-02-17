@@ -41,16 +41,18 @@ final class ContentViewModel: ObservableObject {
     }
     
     func openSheetFirst(autoClose: Bool) {
-        coordinator.sheetType = .sheetFirst("Sheet First")
         if autoClose {
+            coordinator.sheetType = .sheetFirst("Auto Close Sheet")
             DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
                 self.coordinator.dismissSheet()
             }
+        } else {
+            coordinator.sheetType = .sheetFirst("Close Sheet")
         }
     }
     
     func openComplexLink() {
-        coordinator.linkType = .linkSecondCoordinator
+        coordinator.linkType = .linkSecondCoordinator2
     }
     
     func openCoverFirst() {
@@ -73,6 +75,7 @@ extension ContentViewModel {
         case linkSecond
         case linkThirdWithParams(String)
         case linkSecondCoordinator
+        case linkSecondCoordinator2
         
         var id: String {
             String(describing: self)
