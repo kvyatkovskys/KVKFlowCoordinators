@@ -36,11 +36,10 @@ pod 'KVKFlowCoordinators'
 - Create a coordinator that inherits from the`FlowCoordinator` base class if you want to use `.sheet`, `.navigationDestination`, `.fullScreenCover`.
 - Or use a specific coordinator class `SheetCoordinator, LinkCoordinator, CoverCoordinator, SheetAndLinkCoordinator, SheetAndCoverCoordinator, LinkAndCoverCoordinator`.
 - Create a `ViewModel` if you need.
-- Create a `CoordinatorView` with the created coordinator.
-
+- Create a `CoordinatorView` -> use the `FlowCoordinatorView` with the created coordinator.
 
 To work with navigationLink use `.navigationDestination(for: NavigationLinkType.self)`.
-_`.navigationDestination(item: $item)` doesn't work._
+**`.navigationDestination(item: $item)` doesn't work**.
 
 
 ```swift
@@ -60,7 +59,7 @@ struct ContentCoordinatorView: View {
     @StateObject private var coordinator = ContentCoordinator()
     
     var body: some View {
-        NavigationStack(path: $coordinator.path) {
+        FlowCoordinatorView(coordinator) {
             ContentView(vm: coordinator.vm)
                 .fullScreenCover(item: $coordinator.coverType, content: { (item) in
                     SheetView(title: "Cover View")

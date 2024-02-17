@@ -6,25 +6,28 @@
 //
 
 import SwiftUI
+import KVKFlowCoordinators
 
 struct SecondContentCoordinatorView: View {
     
     @ObservedObject var coordinator: SecondContentCoordinator
     
     var body: some View {
-        SecondContentView(vm: coordinator.vm)
-            .sheet(item: $coordinator.sheetType) { item in
-                switch item {
-                case .sheet(let title):
-                    SheetView(title: title)
+        FlowCoordinatorView(coordinator) {
+            SecondContentView(vm: coordinator.vm)
+                .sheet(item: $coordinator.sheetType) { item in
+                    switch item {
+                    case .sheet(let title):
+                        SheetView(title: title)
+                    }
                 }
-            }
-            .navigationDestination(for: SecondContentViewModel.SecondDetailLink.self) { (item) in
-                switch item {
-                case .detailLink:
-                    DetailNavigationLinkView(coordinator: coordinator)
+                .navigationDestination(for: SecondContentViewModel.SecondDetailLink.self) { (item) in
+                    switch item {
+                    case .detailLink:
+                        DetailNavigationLinkView(coordinator: coordinator)
+                    }
                 }
-            }
+        }
     }
 }
 
@@ -32,9 +35,7 @@ struct SecondContentCoordinatorPreview: View {
     @StateObject var coordinator = SecondContentCoordinator(title: "Second Detail View")
     
     var body: some View {
-        NavigationStack(path: $coordinator.path) {
-            SecondContentCoordinatorView(coordinator: coordinator)
-        }
+        SecondContentCoordinatorView(coordinator: coordinator)
     }
 }
  

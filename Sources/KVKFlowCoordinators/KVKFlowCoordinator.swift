@@ -17,6 +17,7 @@ public protocol FlowProtocol: ObservableObject {
     var linkType: L? { get set }
     var coverType: C? { get set }
     var path: NavigationPath { get set }
+    var canWorkWithLink: Bool { get }
     var cancellable: Set<AnyCancellable> { get set }
     var parentFlowCoordinator: (any FlowProtocol)? { get set }
     
@@ -26,21 +27,6 @@ public protocol FlowProtocol: ObservableObject {
 }
 
 extension FlowProtocol {
-    
-    @available(swift, obsoleted: 0.1.1, renamed: "popToRoot")
-    public func goToRoot() {
-        popToRoot()
-    }
-    
-    @available(swift, obsoleted: 0.1.1, renamed: "pop")
-    public func goToBack() {
-        popView()
-    }
-    
-    @available(swift, obsoleted: 0.1.1, renamed: "pushTo")
-    public func pushToLink<L: FlowTypeProtocol>(_ link: L) {
-        pushTo(link)
-    }
     
     public func popToRoot() {
         if let parentFlowCoordinator {
@@ -90,6 +76,14 @@ open class FlowBaseCoordinator<Sheet: FlowTypeProtocol, Link: FlowTypeProtocol, 
     @Published public var linkType: Link?
     @Published public var coverType: Cover?
     @Published public var path = NavigationPath()
+    
+    public var canWorkWithLink: Bool {
+        if Link.self == FlowEmptyType.self {
+            return false
+        } else {
+            return true
+        }
+    }
     public var cancellable = Set<AnyCancellable>()
     public var parentFlowCoordinator: (any FlowProtocol)?
     
