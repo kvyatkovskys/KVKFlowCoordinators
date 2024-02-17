@@ -38,7 +38,7 @@ extension FlowProtocol {
     }
     
     @available(swift, obsoleted: 0.1.1, renamed: "pushTo")
-    public func pushToLink<L: Hashable>(_ link: L) {
+    public func pushToLink<L: FlowTypeProtocol>(_ link: L) {
         pushTo(link)
     }
     
@@ -58,7 +58,7 @@ extension FlowProtocol {
         }
     }
     
-    public func pushTo<L: Hashable>(_ link: L) {
+    public func pushTo<L: FlowTypeProtocol>(_ link: L) {
         if let parentFlowCoordinator {
             parentFlowCoordinator.path.append(link)
         } else {
