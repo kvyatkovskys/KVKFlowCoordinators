@@ -133,4 +133,4 @@ https://github.com/kvyatkovskys/KVKFlowCoordinators/assets/8233076/4f4bd26b-8103
 
 ## License
 
-KVKFlowCoordinators is available under the [MIT license](https://github.com/kvyatkovskys/KVKFlowCoordinators/blob/master/LICENSE)
+KVKFlowCoordinators is available under the [MIT license](https://github.com/kvyatkovskys/KVKFlowCoordinators/blob/master/LICENSE.md)
