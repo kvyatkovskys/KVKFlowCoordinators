@@ -9,7 +9,7 @@ Pod::Spec.new do |spec|
                    DESC
                    
   spec.homepage     = "https://github.com/kvyatkovskys/KVKFlowCoordinators"
-  spec.license      = { :type => 'MIT', :file => 'LICENSE' }
+  spec.license      = { :type => 'MIT', :file => 'LICENSE.md' }
   spec.author       = { "Kviatkovskii Sergei" => "sergejkvyatkovskij@gmail.com" }
   spec.source       = { :git => "https://github.com/kvyatkovskys/KVKFlowCoordinators.git", :tag => "#{spec.version}" }
   spec.ios.deployment_target = '16.0'
