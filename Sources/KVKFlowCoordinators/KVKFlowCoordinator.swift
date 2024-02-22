@@ -19,7 +19,7 @@ public protocol FlowProtocol: ObservableObject {
     var path: NavigationPath { get set }
     var canWorkWithLink: Bool { get }
     var cancellable: Set<AnyCancellable> { get set }
-    var parent: (any FlowProtocol)? { get set }
+    var kvkParent: (any FlowProtocol)? { get set }
     
     func popToRoot()
     func popView()
@@ -46,12 +46,12 @@ open class FlowBaseCoordinator<Sheet: FlowTypeProtocol, Link: FlowTypeProtocol, 
         }
     }
     public var cancellable = Set<AnyCancellable>()
-    public var parent: (any FlowProtocol)?
+    public var kvkParent: (any FlowProtocol)?
         
     private var pathLinks: [any Hashable] = []
     
     public init(parent: (any FlowProtocol)? = nil) {
-        self.parent = parent
+        self.kvkParent = parent
         subscribeOnLinks()
     }
     
@@ -70,24 +70,24 @@ open class FlowBaseCoordinator<Sheet: FlowTypeProtocol, Link: FlowTypeProtocol, 
     }
     
     public func popToRoot() {
-        if let parent {
-            parent.path = NavigationPath()
+        if let kvkParent {
+            kvkParent.path = NavigationPath()
         } else {
             path = NavigationPath()
         }
     }
     
     public func popView() {
-        if let parentPath = parent?.path, !parentPath.isEmpty {
-            parent?.path.removeLast()
+        if let parentPath = kvkParent?.path, !parentPath.isEmpty {
+            kvkParent?.path.removeLast()
         } else if !path.isEmpty {
             path.removeLast()
         }
     }
     
     public func pushTo<L: FlowTypeProtocol>(_ link: L) {
-        if let parent {
-            parent.path.append(link)
+        if let kvkParent {
+            kvkParent.path.append(link)
         } else {
             path.append(link)
         }

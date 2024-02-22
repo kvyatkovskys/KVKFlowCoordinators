@@ -23,7 +23,7 @@ public struct FlowCoordinatorView<T: FlowProtocol, U: View>: View {
     
     public var body: some View {
         // if parent coordinator has already containts `NavigationStack` no need to add the another one
-        if let parent = coordinator.parent, parent.canWorkWithLink {
+        if let parent = coordinator.kvkParent, parent.canWorkWithLink {
             content()
         } else if coordinator.canWorkWithLink || useNavigationStack {
             NavigationStack(path: $coordinator.path) {
