@@ -19,51 +19,12 @@ public protocol FlowProtocol: ObservableObject {
     var path: NavigationPath { get set }
     var canWorkWithLink: Bool { get }
     var cancellable: Set<AnyCancellable> { get set }
-    var parentFlowCoordinator: (any FlowProtocol)? { get set }
+    var parent: (any FlowProtocol)? { get set }
     
     func popToRoot()
     func popView()
     func pushTo(_ link: L)
-}
-
-extension FlowProtocol {
-    
-    public func popToRoot() {
-        if let parentFlowCoordinator {
-            parentFlowCoordinator.path = NavigationPath()
-        } else {
-            path = NavigationPath()
-        }
-    }
-    
-    public func popView() {
-        if let parentPath = parentFlowCoordinator?.path, !parentPath.isEmpty {
-            parentFlowCoordinator?.path.removeLast()
-        } else if !path.isEmpty {
-            path.removeLast()
-        }
-    }
-    
-    public func pushTo<L: FlowTypeProtocol>(_ link: L) {
-        if let parentFlowCoordinator {
-            parentFlowCoordinator.path.append(link)
-        } else {
-            path.append(link)
-        }
-    }
-    
-    public func dismissSheet() {
-        sheetType = nil
-    }
-    
-    public func dismissCover() {
-        coverType = nil
-    }
-    
-    // MARK: Internal-
-    func removeObservers() {
-        cancellable.removeAll()
-    }
+    func subscribeOnLinks()
 }
 
 open class FlowBaseCoordinator<Sheet: FlowTypeProtocol, Link: FlowTypeProtocol, Cover: FlowTypeProtocol>: FlowProtocol {
@@ -85,20 +46,72 @@ open class FlowBaseCoordinator<Sheet: FlowTypeProtocol, Link: FlowTypeProtocol, 
         }
     }
     public var cancellable = Set<AnyCancellable>()
-    public var parentFlowCoordinator: (any FlowProtocol)?
+    public var parent: (any FlowProtocol)?
+        
+    private var pathLinks: [any Hashable] = []
     
-    public init(parentFlowCoordinator: (any FlowProtocol)? = nil) {
-        self.parentFlowCoordinator = parentFlowCoordinator
-        $linkType
-            .compactMap { $0 }
-            .sink { [weak self] link in
-                self?.pushTo(link)
-            }
-            .store(in: &cancellable)
+    public init(parent: (any FlowProtocol)? = nil) {
+        self.parent = parent
+        subscribeOnLinks()
     }
     
     deinit {
         removeObservers()
+    }
+    
+    // MARK: Public-
+    public func subscribeOnLinks() {
+        $linkType
+            .compactMap { $0 }
+            .sink { [weak self] link in
+                self?.proxyPushTo(link)
+            }
+            .store(in: &cancellable)
+    }
+    
+    public func popToRoot() {
+        if let parent {
+            parent.path = NavigationPath()
+        } else {
+            path = NavigationPath()
+        }
+    }
+    
+    public func popView() {
+        if let parentPath = parent?.path, !parentPath.isEmpty {
+            parent?.path.removeLast()
+        } else if !path.isEmpty {
+            path.removeLast()
+        }
+    }
+    
+    public func pushTo<L: FlowTypeProtocol>(_ link: L) {
+        if let parent {
+            parent.path.append(link)
+        } else {
+            path.append(link)
+        }
+    }
+    
+    public func dismissSheet() {
+        sheetType = nil
+    }
+    
+    public func dismissCover() {
+        coverType = nil
+    }
+
+    
+    // MARK: Internal-
+    func removeObservers() {
+        cancellable.removeAll()
+        pathLinks.removeAll()
+    }
+    
+    // MARK: Private-
+    private func proxyPushTo<L: FlowTypeProtocol>(_ link: L) {
+        pathLinks.append(link.id)
+        pushTo(link)
     }
 }
 
@@ -132,3 +145,6 @@ open class SheetAndCoverCoordinator<Sheet: FlowTypeProtocol, Cover: FlowTypeProt
 
 /// To contol link and cover navigation
 open class LinkAndCoverCoordinator<Link: FlowTypeProtocol, Cover: FlowTypeProtocol>: FlowBaseCoordinator<FlowEmptyType, Link, Cover> {}
+
+/// Empty coordinator  class
+open class EmptyCoordinator: FlowBaseCoordinator<FlowEmptyType, FlowEmptyType, FlowEmptyType> {}

@@ -13,32 +13,36 @@ struct ContentCoordinatorView: View {
     
     var body: some View {
         FlowCoordinatorView(coordinator) {
-            ContentView(vm: coordinator.vm)
-#if !os(macOS)
-                .fullScreenCover(item: $coordinator.coverType, content: { (item) in
-                    SheetView(title: "Cover View")
-                })
-#endif
-                .sheet(item: $coordinator.sheetType) { (item) in
-                    switch item {
-                    case .sheetFirst(let title):
-                        SheetView(title: title)
-                    }
-                }
-                .navigationDestination(for: ContentViewModel.LinkType.self) { (item) in
-                    switch item {
-                    case .linkFirstWithParams(let title),
-                            .linkThirdWithParams(let title):
-                        NavigationLinkView(title: title)
-                    case .linkSecond:
-                        NavigationLinkView(title: "Test Second Link")
-                    case .linkSecondCoordinator:
-                        SecondContentCoordinatorView(coordinator: coordinator.secondContentCoordinator)
-                    case .linkSecondCoordinator2:
-                        SecondContentCoordinatorView(coordinator: coordinator.secondContentCoordinator)
-                    }
-                }
+            bodyView
         }
+    }
+    
+    private var bodyView: some View {
+        ContentView(vm: coordinator.vm)
+#if !os(macOS)
+            .fullScreenCover(item: $coordinator.coverType, content: { (item) in
+                SheetView(title: "Cover View")
+            })
+#endif
+            .sheet(item: $coordinator.sheetType) { (item) in
+                switch item {
+                case .sheetFirst(let title):
+                    SheetView(title: title)
+                }
+            }
+            .navigationDestination(for: ContentViewModel.LinkType.self) { (item) in
+                switch item {
+                case .linkFirstWithParams(let title),
+                        .linkThirdWithParams(let title):
+                    NavigationLinkView(title: title)
+                case .linkSecond:
+                    NavigationLinkView(title: "Test Second Link")
+                case .linkSecondCoordinator:
+                    SecondContentCoordinatorView(coordinator: coordinator.secondContentCoordinator)
+                case .linkSecondCoordinator2:
+                    SecondContentCoordinatorView(coordinator: coordinator.secondContentCoordinator)
+                }
+            }
     }
     
 }
