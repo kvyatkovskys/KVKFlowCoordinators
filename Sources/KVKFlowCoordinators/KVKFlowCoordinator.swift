@@ -176,7 +176,7 @@ public protocol FlowTypeProtocol: Identifiable, Hashable {
 }
 
 public extension FlowTypeProtocol {
-    public var id: String {
+    var id: String {
         pathID
     }
 }
