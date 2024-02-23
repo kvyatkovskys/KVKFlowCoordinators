@@ -12,8 +12,8 @@ final class SecondContentCoordinator: SheetAndLinkCoordinator<SecondContentViewM
     
     @Published var vm: SecondContentViewModel!
         
-    init(parentCoordinator: ContentCoordinator? = nil, title: String) {
-        super.init(parent: parentCoordinator)
+    init(parent: ContentCoordinator? = nil, title: String) {
+        super.init(parent: parent)
         vm = SecondContentViewModel(coordinator: self, title: title)
     }
 }
@@ -36,6 +36,10 @@ final class SecondContentViewModel: ObservableObject {
         coordinator.linkType = .detailLink("Second Detail View Link")
     }
     
+    func openDetailTwo() {
+        coordinator.linkType = .detailLink2("Second Detail View Link 2")
+    }
+    
     func openSheet() {
         coordinator.sheetType = .sheet("Detail Sheet")
     }
@@ -45,8 +49,9 @@ extension SecondContentViewModel {
     
     enum SecondDetailLink: FlowTypeProtocol {
         case detailLink(String)
+        case detailLink2(String)
         
-        var id: String {
+        var pathID: String {
             String(describing: self)
         }
     }
@@ -54,7 +59,7 @@ extension SecondContentViewModel {
     enum SecondSheetLink: FlowTypeProtocol {
         case sheet(String)
         
-        var id: String {
+        var pathID: String {
             String(describing: self)
         }
     }

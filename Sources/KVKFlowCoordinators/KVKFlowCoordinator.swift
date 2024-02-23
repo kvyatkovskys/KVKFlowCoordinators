@@ -17,12 +17,14 @@ public protocol FlowProtocol: ObservableObject {
     var linkType: L? { get set }
     var coverType: C? { get set }
     var path: NavigationPath { get set }
+    var pathLinks: [String: Int] { get set }
     var canWorkWithLink: Bool { get }
     var cancellable: Set<AnyCancellable> { get set }
     var kvkParent: (any FlowProtocol)? { get set }
     
     func popToRoot()
     func popView()
+    func popToView(_ pathID: String?)
     func pushTo(_ link: L)
     func subscribeOnLinks()
 }
@@ -47,8 +49,7 @@ open class FlowBaseCoordinator<Sheet: FlowTypeProtocol, Link: FlowTypeProtocol, 
     }
     public var cancellable = Set<AnyCancellable>()
     public var kvkParent: (any FlowProtocol)?
-        
-    private var pathLinks: [any Hashable] = []
+    public var pathLinks: [String: Int] = [:]
     
     public init(parent: (any FlowProtocol)? = nil) {
         self.kvkParent = parent
@@ -85,6 +86,10 @@ open class FlowBaseCoordinator<Sheet: FlowTypeProtocol, Link: FlowTypeProtocol, 
         }
     }
     
+    public func popToView(_ pathID: String?) {
+        proxyPopToView(pathID)
+    }
+    
     public func pushTo<L: FlowTypeProtocol>(_ link: L) {
         if let kvkParent {
             kvkParent.path.append(link)
@@ -101,7 +106,6 @@ open class FlowBaseCoordinator<Sheet: FlowTypeProtocol, Link: FlowTypeProtocol, 
         coverType = nil
     }
 
-    
     // MARK: Internal-
     func removeObservers() {
         cancellable.removeAll()
@@ -110,18 +114,60 @@ open class FlowBaseCoordinator<Sheet: FlowTypeProtocol, Link: FlowTypeProtocol, 
     
     // MARK: Private-
     private func proxyPushTo<L: FlowTypeProtocol>(_ link: L) {
-        pathLinks.append(link.id)
         pushTo(link)
+        
+        let pathLinkId = link.pathID
+        var links = kvkParent?.pathLinks ?? pathLinks
+        if let kvkParent {
+            links[pathLinkId] = kvkParent.path.count
+            kvkParent.pathLinks = links
+        } else {
+            links[pathLinkId] = path.count
+            pathLinks = links
+        }
+    }
+    
+    private func proxyPopToView(_ pathID: String?) {
+        var links = kvkParent?.pathLinks ?? pathLinks
+        guard let pathID, let position = links[pathID] else { return }
+        
+        if let parentPath = kvkParent?.path, !parentPath.isEmpty {
+            let diff = parentPath.count - position
+            kvkParent?.path.removeLast(diff)
+            removePathLinks(&links, position: position)
+            kvkParent?.pathLinks = links
+        } else if !path.isEmpty {
+            let diff = path.count - position
+            path.removeLast(diff)
+            removePathLinks(&links, position: position)
+            pathLinks = links
+        }
+    }
+    
+    private func removePathLinks(_ links: inout [String: Int], position: Int) {
+        links.forEach {
+            if $0.value > position {
+                links.removeValue(forKey: $0.key)
+            }
+        }
     }
 }
 
-public protocol FlowTypeProtocol: Identifiable, Hashable {}
+public protocol FlowTypeProtocol: Identifiable, Hashable {
+    var pathID: String { get }
+}
+
+public extension FlowTypeProtocol {
+    public var id: String {
+        pathID
+    }
+}
 
 /// stab for child coordinators
 /// - class Coordinator: FlowCoordinator<SheetType, **FlowEmptyType**, CoverType>
 public enum FlowEmptyType: FlowTypeProtocol {
-    public var id: Int {
-        0
+    public var pathID: String {
+        ""
     }
 }
 

@@ -39,14 +39,14 @@ struct SheetCoordinatorTestView: View {
     enum SheetTestType: FlowTypeProtocol {
         case sheet
         
-        var id: String {
+        var pathID: String {
             String(describing: self)
         }
     }
     enum LinkTestType: FlowTypeProtocol {
         case link
         
-        var id: String {
+        var pathID: String {
             String(describing: self)
         }
     }

@@ -25,6 +25,8 @@ struct SecondContentCoordinatorView: View {
                     switch item {
                     case .detailLink:
                         DetailNavigationLinkView(coordinator: coordinator)
+                    case .detailLink2:
+                        DetailNavigationLinkView2(coordinator: coordinator)
                     }
                 }
         }

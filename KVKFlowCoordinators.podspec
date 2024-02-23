@@ -1,7 +1,7 @@
 Pod::Spec.new do |spec|
 
   spec.name         = "KVKFlowCoordinators"
-  spec.version      = "0.1.7"
+  spec.version      = "0.1.8"
   spec.summary      = "SwiftUI flow coordinators"
   
   spec.description  = <<-DESC
