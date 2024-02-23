@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		F90C59AD2B88DDE00008133F /* DetailNavigationLinkView2.swift in Sources */ = {isa = PBXBuildFile; fileRef = F90C59AC2B88DDE00008133F /* DetailNavigationLinkView2.swift */; };
 		F952C5572B790E4600CA0308 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F952C5562B790E4600CA0308 /* Assets.xcassets */; };
 		F952C55A2B790E4600CA0308 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F952C5592B790E4600CA0308 /* Preview Assets.xcassets */; };
 		F952C5642B790E4600CA0308 /* DemoFlowCoordinatorsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F952C5632B790E4600CA0308 /* DemoFlowCoordinatorsTests.swift */; };
@@ -43,6 +44,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		F90C59AC2B88DDE00008133F /* DetailNavigationLinkView2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailNavigationLinkView2.swift; sourceTree = "<group>"; };
 		F952C54F2B790E4500CA0308 /* DemoFlowCoordinators.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DemoFlowCoordinators.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F952C5562B790E4600CA0308 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F952C5592B790E4600CA0308 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
@@ -122,6 +124,7 @@
 				F952C5812B790F0600CA0308 /* ContentViewModel.swift */,
 				F952C58F2B7910B200CA0308 /* NavigationLinkView.swift */,
 				F952C5852B79101B00CA0308 /* DetailNavigationLinkView.swift */,
+				F90C59AC2B88DDE00008133F /* DetailNavigationLinkView2.swift */,
 				F952C58D2B79109900CA0308 /* SecondContentCoordinatorView.swift */,
 				F952C58B2B79108500CA0308 /* SecondContentViewModel.swift */,
 				F952C5892B79106200CA0308 /* SheetView.swift */,
@@ -296,6 +299,7 @@
 				F952C5842B79100200CA0308 /* ContentCoordinatorView.swift in Sources */,
 				F952C5862B79101B00CA0308 /* DetailNavigationLinkView.swift in Sources */,
 				F952C5882B79104D00CA0308 /* DemoFlowCoordinatorsApp.swift in Sources */,
+				F90C59AD2B88DDE00008133F /* DetailNavigationLinkView2.swift in Sources */,
 				F952C5822B790F0600CA0308 /* ContentViewModel.swift in Sources */,
 				F952C58C2B79108500CA0308 /* SecondContentViewModel.swift in Sources */,
 				F952C58A2B79106200CA0308 /* SheetView.swift in Sources */,

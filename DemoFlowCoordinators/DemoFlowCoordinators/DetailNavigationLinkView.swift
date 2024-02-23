@@ -12,8 +12,13 @@ struct DetailNavigationLinkView: View {
     @ObservedObject var coordinator: SecondContentCoordinator
     
     var body: some View {
-        Button("Go to Root") {
-            coordinator.popToRoot()
+        VStack(spacing: 30) {
+            Button("Go to Root") {
+                coordinator.popToRoot()
+            }
+            Button("Open Detail Two") {
+                coordinator.vm.openDetailTwo()
+            }
         }
         .navigationTitle("Detail View")
     }

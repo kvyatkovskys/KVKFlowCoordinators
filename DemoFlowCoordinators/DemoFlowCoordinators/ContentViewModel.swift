@@ -15,7 +15,7 @@ final class ContentCoordinator: FlowCoordinator<ContentViewModel.SheetType, Cont
     init() {
         super.init()
         vm = ContentViewModel(coordinator: self)
-        secondContentCoordinator = SecondContentCoordinator(parentCoordinator: self, title: "Second Coordinator")
+        secondContentCoordinator = SecondContentCoordinator(parent: self, title: "Second Coordinator")
     }
 }
 
@@ -65,7 +65,7 @@ extension ContentViewModel {
     enum CoverType: FlowTypeProtocol {
         case coverFirst
         
-        var id: String {
+        var pathID: String {
             String(describing: self)
         }
     }
@@ -77,7 +77,7 @@ extension ContentViewModel {
         case linkSecondCoordinator
         case linkSecondCoordinator2
         
-        var id: String {
+        var pathID: String {
             String(describing: self)
         }
     }
@@ -85,7 +85,7 @@ extension ContentViewModel {
     enum SheetType: FlowTypeProtocol {
         case sheetFirst(String)
         
-        var id: String {
+        var pathID: String {
             String(describing: self)
         }
     }
