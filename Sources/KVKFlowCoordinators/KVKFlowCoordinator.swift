@@ -24,8 +24,9 @@ public protocol FlowProtocol: ObservableObject {
     
     func popToRoot()
     func popView()
-    func popToView(_ pathID: String?)
-    func pushTo(_ link: L)
+    @discardableResult
+    func popToView(_ pathID: String) -> [String]
+    func pushTo<T: FlowTypeProtocol>(_ link: T)
     func subscribeOnLinks()
 }
 
@@ -70,14 +71,18 @@ open class FlowBaseCoordinator<Sheet: FlowTypeProtocol, Link: FlowTypeProtocol, 
             .store(in: &cancellable)
     }
     
+    ///Pops all the views on the stack except the root view.
     public func popToRoot() {
         if let kvkParent {
             kvkParent.path = NavigationPath()
+            kvkParent.pathLinks.removeAll()
         } else {
             path = NavigationPath()
+            pathLinks.removeAll()
         }
     }
     
+    ///Pops the top view from the navigation stack.
     public func popView() {
         if let parentPath = kvkParent?.path, !parentPath.isEmpty {
             kvkParent?.path.removeLast()
@@ -86,11 +91,19 @@ open class FlowBaseCoordinator<Sheet: FlowTypeProtocol, Link: FlowTypeProtocol, 
         }
     }
     
-    public func popToView(_ pathID: String?) {
+    ///Pops views until the specified view is at the top of the navigation stack.
+    ///#### Parameter
+    ///##### pathID
+    ///The **pathID** that you want to be at the top of the stack. This view must currently be on the navigation stack.
+    ///#### Return Value
+    ///An array containing the path link IDs that were popped from the stack.
+    @discardableResult
+    public func popToView(_ pathID: String) -> [String] {
         proxyPopToView(pathID)
     }
     
-    public func pushTo<L: FlowTypeProtocol>(_ link: L) {
+    ///Pushes a view onto the receiver’s stack.
+    public func pushTo<T: FlowTypeProtocol>(_ link: T) {
         if let kvkParent {
             kvkParent.path.append(link)
         } else {
@@ -127,29 +140,34 @@ open class FlowBaseCoordinator<Sheet: FlowTypeProtocol, Link: FlowTypeProtocol, 
         }
     }
     
-    private func proxyPopToView(_ pathID: String?) {
+    private func proxyPopToView(_ pathID: String) -> [String] {
         var links = kvkParent?.pathLinks ?? pathLinks
-        guard let pathID, let position = links[pathID] else { return }
+        guard let position = links[pathID] else { return [] }
         
+        var removedLinks = [String]()
         if let parentPath = kvkParent?.path, !parentPath.isEmpty {
             let diff = parentPath.count - position
             kvkParent?.path.removeLast(diff)
-            removePathLinks(&links, position: position)
+            removedLinks = removePathLinks(&links, position: position)
             kvkParent?.pathLinks = links
         } else if !path.isEmpty {
             let diff = path.count - position
             path.removeLast(diff)
-            removePathLinks(&links, position: position)
+            removedLinks = removePathLinks(&links, position: position)
             pathLinks = links
         }
+        return removedLinks
     }
     
-    private func removePathLinks(_ links: inout [String: Int], position: Int) {
+    private func removePathLinks(_ links: inout [String: Int], position: Int) -> [String] {
+        var result = [String]()
         links.forEach {
             if $0.value > position {
                 links.removeValue(forKey: $0.key)
+                result.append($0.key)
             }
         }
+        return result
     }
 }
 
