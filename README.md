@@ -31,15 +31,42 @@ pod 'KVKFlowCoordinators'
 [Adding Package Dependencies to Your App](https://developer.apple.com/documentation/swift_packages/adding_package_dependencies_to_your_app)
 
 ## Usage for SwiftUI
-- Import `KVKFlowCoordinators`.
-- Create an entities with type of navigation (for ex. `enum SheetType: FlowTypeProtocol`).
-- Create a coordinator that inherits from the`FlowCoordinator` base class if you want to use `.sheet`, `.navigationDestination`, `.fullScreenCover`.
-- Or use a specific coordinator class `SheetCoordinator, LinkCoordinator, CoverCoordinator, SheetAndLinkCoordinator, SheetAndCoverCoordinator, LinkAndCoverCoordinator`.
-- Create a `ViewModel` if you need.
-- Create a `CoordinatorView` -> use the `FlowCoordinatorView` with the created coordinator.
+- Import `KVKFlowCoordinators`
+- Create an entities with type of navigation
+  ```swift
+  enum SheetType: FlowTypeProtocol {
+      case detail
 
-To work with navigationLink use `.navigationDestination(for: NavigationLinkType.self)`.
-**`.navigationDestination(item: $item)` doesn't work**.
+      var pathID: String {
+          "detail"
+      }
+  }
+  ```
+- Create a coordinator that inherits from the`FlowCoordinator` base class if you want to use:
+  - `.sheet`
+  - `.navigationDestination`
+  - `.fullScreenCover`
+- Or use a specific coordinator class:
+  - `SheetCoordinator`
+  - `LinkCoordinator`
+  - `CoverCoordinator`
+  - `SheetAndLinkCoordinator`
+  - `SheetAndCoverCoordinator`
+  - `LinkAndCoverCoordinator`
+- Create a `CoordinatorView` -> use the `FlowCoordinatorView` view with the created coordinator inside body
+  ```swift
+  var body: some View {
+      FlowCoordinatorView(coordinator) {
+          // content
+      }
+  }
+  ```
+
+To work with _navigation link_ use 
+```swift
+.navigationDestination(for: NavigationLinkType.self)
+```
+**`.navigationDestination(item: $item)` doesn't work**
 
 
 ```swift
