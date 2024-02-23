@@ -32,7 +32,7 @@ pod 'KVKFlowCoordinators'
 
 ## Usage for SwiftUI
 - Import `KVKFlowCoordinators`
-- Create an entities with type of navigation
+- Create an entities with type of navigation (for ex.):
   ```swift
   enum SheetType: FlowTypeProtocol {
       case detail
@@ -68,7 +68,31 @@ To work with _navigation link_ use
 ```
 **`.navigationDestination(item: $item)` doesn't work**
 
+### Navigation Link Features
+- Pops all the views on the stack except the root view:
+  ```swift
+  func popToRoot()
+  ```
+- Pops the top view from the navigation stack:
+  ```swift
+  func popView()
+  ```
+- Pushes a view onto the receiver’s stack:
+  ```swift
+  func pushTo<T: FlowTypeProtocol>(_ link: T)
+  ```
+- Pops views until the specified view is at the top of the navigation stack:
+  #### Parameter
+  ##### pathID
+  The `pathID` that you want to be at the top of the stack. This view must currently be on the navigation stack.
+  #### Return Value
+  An array containing the path link IDs that were popped from the stack.
+  
+  ```swift
+  func popToView(_ pathID: String?) -> [String]
+  ```
 
+##
 ```swift
 final class ContentCoordinator: FlowCoordinator<ContentViewModel.SheetType, ContentViewModel.LinkType, ContentViewModel.CoverType> {
     @Published var vm: ContentViewModel!
