@@ -81,16 +81,15 @@ To work with _navigation link_ use
   ```swift
   func pushTo<T: FlowTypeProtocol>(_ link: T)
   ```
-- Pops views until the specified view is at the top of the navigation stack:
+- Pops views until the specified view is at the top of the navigation stack: 
+  ```swift
+  func popToView(_ pathID: String) -> [String]
+  ```
   #### Parameter
   ##### pathID
   The `pathID` that you want to be at the top of the stack. This view must currently be on the navigation stack.
   #### Return Value
   An array containing the path link IDs that were popped from the stack.
-  
-  ```swift
-  func popToView(_ pathID: String?) -> [String]
-  ```
 
 ##
 ```swift
