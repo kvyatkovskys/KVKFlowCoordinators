@@ -36,10 +36,6 @@ final class ContentViewModel: ObservableObject {
         coordinator.linkType = .linkSecond
     }
     
-    func openThirdLink() {
-        coordinator.linkType = .linkThirdWithParams("Third Link View")
-    }
-    
     func openSheetFirst(autoClose: Bool) {
         if autoClose {
             coordinator.sheetType = .sheetFirst("Auto Close Sheet")
