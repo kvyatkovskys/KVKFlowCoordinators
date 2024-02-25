@@ -36,8 +36,7 @@ struct ContentView: View {
             Button("Complex Btn Link") {
                 vm.openComplexLink()
             }
-            NavigationLink("Complex Nav Link",
-                           value: ContentViewModel.LinkType.linkSecondCoordinator)
+            NavigationLink("Complex Nav Link", value: ContentViewModel.LinkType.linkSecondCoordinator2)
         }
         .padding()
     }

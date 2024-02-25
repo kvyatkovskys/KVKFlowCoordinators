@@ -18,6 +18,7 @@ public protocol FlowProtocol: ObservableObject {
     var coverType: C? { get set }
     var path: NavigationPath { get set }
     var pathLinks: [String: Int] { get set }
+    var lastActiveLink: String? { get set }
     var canWorkWithLink: Bool { get }
     var cancellable: Set<AnyCancellable> { get set }
     var kvkParent: (any FlowProtocol)? { get set }
@@ -51,6 +52,7 @@ open class FlowBaseCoordinator<Sheet: FlowTypeProtocol, Link: FlowTypeProtocol, 
     public var cancellable = Set<AnyCancellable>()
     public var kvkParent: (any FlowProtocol)?
     public var pathLinks: [String: Int] = [:]
+    public var lastActiveLink: String?
     
     public init(parent: (any FlowProtocol)? = nil) {
         self.kvkParent = parent
@@ -76,9 +78,11 @@ open class FlowBaseCoordinator<Sheet: FlowTypeProtocol, Link: FlowTypeProtocol, 
         if let kvkParent {
             kvkParent.path = NavigationPath()
             kvkParent.pathLinks.removeAll()
+            kvkParent.lastActiveLink = nil
         } else {
             path = NavigationPath()
             pathLinks.removeAll()
+            lastActiveLink = nil
         }
     }
     
@@ -86,12 +90,18 @@ open class FlowBaseCoordinator<Sheet: FlowTypeProtocol, Link: FlowTypeProtocol, 
     public func popView() {
         if let parentPath = kvkParent?.path, !parentPath.isEmpty {
             kvkParent?.path.removeLast()
+            if let lastActiveLink = kvkParent?.lastActiveLink {
+                kvkParent?.pathLinks.removeValue(forKey: lastActiveLink)
+            }
         } else if !path.isEmpty {
             path.removeLast()
+            if let lastActiveLink = lastActiveLink {
+                pathLinks.removeValue(forKey: lastActiveLink)
+            }
         }
     }
     
-    ///Pops views until the specified view is at the top of the navigation stack.
+    ///Pops views until the specified view is at the top of the navigation stack. Works only if use `func pushTo(_ link:)`.
     ///#### Parameter
     ///##### pathID
     ///The **pathID** that you want to be at the top of the stack. This view must currently be on the navigation stack.
@@ -131,12 +141,14 @@ open class FlowBaseCoordinator<Sheet: FlowTypeProtocol, Link: FlowTypeProtocol, 
         
         let pathLinkId = link.pathID
         var links = kvkParent?.pathLinks ?? pathLinks
-        if let kvkParent {
-            links[pathLinkId] = kvkParent.path.count
-            kvkParent.pathLinks = links
+        if kvkParent != nil {
+            links[pathLinkId] = kvkParent?.path.count ?? 0
+            kvkParent?.pathLinks = links
+            kvkParent?.lastActiveLink = pathLinkId
         } else {
             links[pathLinkId] = path.count
             pathLinks = links
+            lastActiveLink = pathLinkId
         }
     }
     
@@ -150,11 +162,13 @@ open class FlowBaseCoordinator<Sheet: FlowTypeProtocol, Link: FlowTypeProtocol, 
             kvkParent?.path.removeLast(diff)
             removedLinks = removePathLinks(&links, position: position)
             kvkParent?.pathLinks = links
+            kvkParent?.lastActiveLink = pathID
         } else if !path.isEmpty {
             let diff = path.count - position
             path.removeLast(diff)
             removedLinks = removePathLinks(&links, position: position)
             pathLinks = links
+            lastActiveLink = pathID
         }
         return removedLinks
     }

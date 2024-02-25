@@ -64,9 +64,11 @@ pod 'KVKFlowCoordinators'
 
 To work with _navigation link_ use 
 ```swift
-.navigationDestination(for: NavigationLinkType.self)
+.navigationDestination(for: NavigationLinkType.self) { (item) in
+  // content
+}
+// .navigationDestination(item: $item) doesn't work
 ```
-**`.navigationDestination(item: $item)` doesn't work**
 
 ### Navigation Link Features
 - Pops all the views on the stack except the root view:
@@ -81,7 +83,7 @@ To work with _navigation link_ use
   ```swift
   func pushTo<T: FlowTypeProtocol>(_ link: T)
   ```
-- Pops views until the specified view is at the top of the navigation stack: 
+- Pops views until the specified view is at the top of the navigation stack. Works only if use `func pushTo(_ link:)`: 
   ```swift
   func popToView(_ pathID: String) -> [String]
   ```
