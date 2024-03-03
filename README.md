@@ -87,7 +87,7 @@ To work with _navigation link_ use
   ```swift
   func popView()
   ```
-- Pops views until the specified view is at the top of the navigation stack. Works only if use `func pushTo(_ link:)`: 
+- Pops views until the specified view is at the top of the navigation stack. Works only if use `coordinator.linkType`: 
   ```swift
   func popToView(_ pathID: String) -> [String]
   ```
