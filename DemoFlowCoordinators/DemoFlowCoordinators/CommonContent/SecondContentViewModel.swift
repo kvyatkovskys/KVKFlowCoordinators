@@ -12,7 +12,7 @@ final class SecondContentCoordinator: SheetAndLinkCoordinator<SecondContentViewM
     
     @Published var vm: SecondContentViewModel!
         
-    init(parent: ContentCoordinator? = nil, title: String) {
+    init(parent: DemoFlowCoordinator? = nil, title: String) {
         super.init(parent: parent)
         vm = SecondContentViewModel(coordinator: self, title: title)
     }

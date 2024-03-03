@@ -24,6 +24,11 @@
 		F952C58E2B79109900CA0308 /* SecondContentCoordinatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F952C58D2B79109900CA0308 /* SecondContentCoordinatorView.swift */; };
 		F952C5902B7910B200CA0308 /* NavigationLinkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F952C58F2B7910B200CA0308 /* NavigationLinkView.swift */; };
 		F952C5932B7910F100CA0308 /* KVKFlowCoordinators in Frameworks */ = {isa = PBXBuildFile; productRef = F952C5922B7910F100CA0308 /* KVKFlowCoordinators */; };
+		F98CB05F2B933BA300C6C9C0 /* SplitCoordinatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F98CB05E2B933BA300C6C9C0 /* SplitCoordinatorView.swift */; };
+		F98CB0612B93578B00C6C9C0 /* DemoFlowCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = F98CB0602B93578B00C6C9C0 /* DemoFlowCoordinator.swift */; };
+		F98CB0632B93585B00C6C9C0 /* DemoCoordinatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F98CB0622B93585B00C6C9C0 /* DemoCoordinatorView.swift */; };
+		F98CB0672B93CD3A00C6C9C0 /* SplitCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = F98CB0662B93CD3A00C6C9C0 /* SplitCoordinator.swift */; };
+		F98CB0692B94892500C6C9C0 /* TestFlowCoordinatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F98CB0682B94892500C6C9C0 /* TestFlowCoordinatorView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -63,6 +68,11 @@
 		F952C58D2B79109900CA0308 /* SecondContentCoordinatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecondContentCoordinatorView.swift; sourceTree = "<group>"; };
 		F952C58F2B7910B200CA0308 /* NavigationLinkView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationLinkView.swift; sourceTree = "<group>"; };
 		F952C5942B79136500CA0308 /* DemoFlowCoordinators.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = DemoFlowCoordinators.entitlements; sourceTree = "<group>"; };
+		F98CB05E2B933BA300C6C9C0 /* SplitCoordinatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplitCoordinatorView.swift; sourceTree = "<group>"; };
+		F98CB0602B93578B00C6C9C0 /* DemoFlowCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoFlowCoordinator.swift; sourceTree = "<group>"; };
+		F98CB0622B93585B00C6C9C0 /* DemoCoordinatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoCoordinatorView.swift; sourceTree = "<group>"; };
+		F98CB0662B93CD3A00C6C9C0 /* SplitCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplitCoordinator.swift; sourceTree = "<group>"; };
+		F98CB0682B94892500C6C9C0 /* TestFlowCoordinatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestFlowCoordinatorView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -119,15 +129,11 @@
 				F952C5562B790E4600CA0308 /* Assets.xcassets */,
 				F952C5582B790E4600CA0308 /* Preview Content */,
 				F952C5872B79104D00CA0308 /* DemoFlowCoordinatorsApp.swift */,
-				F952C57F2B790EEC00CA0308 /* ContentView.swift */,
-				F952C5832B79100200CA0308 /* ContentCoordinatorView.swift */,
-				F952C5812B790F0600CA0308 /* ContentViewModel.swift */,
-				F952C58F2B7910B200CA0308 /* NavigationLinkView.swift */,
-				F952C5852B79101B00CA0308 /* DetailNavigationLinkView.swift */,
-				F90C59AC2B88DDE00008133F /* DetailNavigationLinkView2.swift */,
-				F952C58D2B79109900CA0308 /* SecondContentCoordinatorView.swift */,
-				F952C58B2B79108500CA0308 /* SecondContentViewModel.swift */,
-				F952C5892B79106200CA0308 /* SheetView.swift */,
+				F98CB0602B93578B00C6C9C0 /* DemoFlowCoordinator.swift */,
+				F98CB0622B93585B00C6C9C0 /* DemoCoordinatorView.swift */,
+				F98CB0682B94892500C6C9C0 /* TestFlowCoordinatorView.swift */,
+				F98CB0652B93CD1500C6C9C0 /* SplitView */,
+				F98CB0642B93CCF800C6C9C0 /* CommonContent */,
 			);
 			path = DemoFlowCoordinators;
 			sourceTree = "<group>";
@@ -155,6 +161,31 @@
 				F952C56F2B790E4600CA0308 /* DemoFlowCoordinatorsUITestsLaunchTests.swift */,
 			);
 			path = DemoFlowCoordinatorsUITests;
+			sourceTree = "<group>";
+		};
+		F98CB0642B93CCF800C6C9C0 /* CommonContent */ = {
+			isa = PBXGroup;
+			children = (
+				F952C57F2B790EEC00CA0308 /* ContentView.swift */,
+				F952C5832B79100200CA0308 /* ContentCoordinatorView.swift */,
+				F952C5812B790F0600CA0308 /* ContentViewModel.swift */,
+				F952C58F2B7910B200CA0308 /* NavigationLinkView.swift */,
+				F952C5852B79101B00CA0308 /* DetailNavigationLinkView.swift */,
+				F90C59AC2B88DDE00008133F /* DetailNavigationLinkView2.swift */,
+				F952C58D2B79109900CA0308 /* SecondContentCoordinatorView.swift */,
+				F952C58B2B79108500CA0308 /* SecondContentViewModel.swift */,
+				F952C5892B79106200CA0308 /* SheetView.swift */,
+			);
+			path = CommonContent;
+			sourceTree = "<group>";
+		};
+		F98CB0652B93CD1500C6C9C0 /* SplitView */ = {
+			isa = PBXGroup;
+			children = (
+				F98CB05E2B933BA300C6C9C0 /* SplitCoordinatorView.swift */,
+				F98CB0662B93CD3A00C6C9C0 /* SplitCoordinator.swift */,
+			);
+			path = SplitView;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -304,7 +335,12 @@
 				F952C58C2B79108500CA0308 /* SecondContentViewModel.swift in Sources */,
 				F952C58A2B79106200CA0308 /* SheetView.swift in Sources */,
 				F952C5802B790EEC00CA0308 /* ContentView.swift in Sources */,
+				F98CB0612B93578B00C6C9C0 /* DemoFlowCoordinator.swift in Sources */,
+				F98CB0692B94892500C6C9C0 /* TestFlowCoordinatorView.swift in Sources */,
 				F952C58E2B79109900CA0308 /* SecondContentCoordinatorView.swift in Sources */,
+				F98CB0672B93CD3A00C6C9C0 /* SplitCoordinator.swift in Sources */,
+				F98CB0632B93585B00C6C9C0 /* DemoCoordinatorView.swift in Sources */,
+				F98CB05F2B933BA300C6C9C0 /* SplitCoordinatorView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

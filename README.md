@@ -53,11 +53,19 @@ pod 'KVKFlowCoordinators'
   - `SheetAndLinkCoordinator`
   - `SheetAndCoverCoordinator`
   - `LinkAndCoverCoordinator`
-- Create a `CoordinatorView` -> use the `FlowCoordinatorView` view with the created coordinator inside body
+- Create a `CoordinatorView` -> use the `FlowCoordinatorView` or `FlowCoordinatorSplitView` view with the created coordinator inside body
   ```swift
   var body: some View {
       FlowCoordinatorView(coordinator) {
           // content
+      }
+  }
+  
+  var body: some View {
+      FlowCoordinatorSplitView(sideBarCoordinator, detailCoordinator) {
+          // side bar content
+      } detail: {
+          // detail content
       }
   }
   ```
@@ -79,10 +87,6 @@ To work with _navigation link_ use
   ```swift
   func popView()
   ```
-- Pushes a view onto the receiver’s stack:
-  ```swift
-  func pushTo<T: FlowTypeProtocol>(_ link: T)
-  ```
 - Pops views until the specified view is at the top of the navigation stack. Works only if use `func pushTo(_ link:)`: 
   ```swift
   func popToView(_ pathID: String) -> [String]
@@ -92,10 +96,10 @@ To work with _navigation link_ use
   The `pathID` that you want to be at the top of the stack. This view must currently be on the navigation stack.
   #### Return Value
   An array containing the path link IDs that were popped from the stack.
-
+  
 ##
 ```swift
-final class ContentCoordinator: FlowCoordinator<ContentViewModel.SheetType, ContentViewModel.LinkType, ContentViewModel.CoverType> {
+final class ContentCoordinator: FlowCoordinator<SheetType, LinkType, CoverType> {
     @Published var vm: ContentViewModel!
     
     private(set) var secondContentCoordinator: SecondContentCoordinator!
