@@ -44,6 +44,6 @@ struct ContentView: View {
 
 #Preview {
     NavigationStack {
-        ContentView(vm: .init(coordinator: ContentCoordinator()))
+        ContentView(vm: .init(coordinator: .init()))
     }
 }

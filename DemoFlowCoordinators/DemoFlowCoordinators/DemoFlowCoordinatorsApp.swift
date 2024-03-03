@@ -11,7 +11,7 @@ import SwiftUI
 struct DemoFlowCoordinatorsApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentCoordinatorView()
+            DemoCoordinatorView()
         }
     }
 }

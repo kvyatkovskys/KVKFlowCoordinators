@@ -12,10 +12,10 @@ final class ContentCoordinator: FlowCoordinator<ContentViewModel.SheetType, Cont
     @Published var vm: ContentViewModel!
     private(set) var secondContentCoordinator: SecondContentCoordinator!
     
-    init() {
-        super.init()
+    init(parent: DemoFlowCoordinator? = nil) {
+        super.init(parent: parent)
         vm = ContentViewModel(coordinator: self)
-        secondContentCoordinator = SecondContentCoordinator(parent: self, title: "Second Coordinator")
+        secondContentCoordinator = SecondContentCoordinator(parent: parent, title: "Second Coordinator")
     }
 }
 

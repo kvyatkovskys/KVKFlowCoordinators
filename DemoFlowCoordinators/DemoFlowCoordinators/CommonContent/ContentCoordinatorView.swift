@@ -9,7 +9,7 @@ import SwiftUI
 import KVKFlowCoordinators
 
 struct ContentCoordinatorView: View {
-    @StateObject private var coordinator = ContentCoordinator()
+    @ObservedObject var coordinator: ContentCoordinator
     
     var body: some View {
         FlowCoordinatorView(coordinator) {
@@ -48,5 +48,5 @@ struct ContentCoordinatorView: View {
 }
 
 #Preview {
-    ContentCoordinatorView()
+    ContentCoordinatorView(coordinator: .init())
 }

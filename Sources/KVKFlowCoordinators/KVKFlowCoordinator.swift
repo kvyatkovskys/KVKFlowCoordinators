@@ -20,18 +20,20 @@ public protocol FlowProtocol: ObservableObject {
     var pathLinks: [String: Int] { get set }
     var lastActiveLink: String? { get set }
     var canWorkWithLink: Bool { get }
-    var cancellable: Set<AnyCancellable> { get set }
+    var kvkCancellable: Set<AnyCancellable> { get set }
     var kvkParent: (any FlowProtocol)? { get set }
+    var useNavigationStack: Bool { get }
     
     func popToRoot()
     func popView()
     @discardableResult
     func popToView(_ pathID: String) -> [String]
-    func pushTo<T: FlowTypeProtocol>(_ link: T)
     func subscribeOnLinks()
 }
 
-open class FlowBaseCoordinator<Sheet: FlowTypeProtocol, Link: FlowTypeProtocol, Cover: FlowTypeProtocol>: FlowProtocol {
+open class FlowBaseCoordinator<Sheet: FlowTypeProtocol,
+                               Link: FlowTypeProtocol,
+                               Cover: FlowTypeProtocol>: FlowProtocol {
     
     public typealias S = Sheet
     public typealias L = Link
@@ -43,16 +45,18 @@ open class FlowBaseCoordinator<Sheet: FlowTypeProtocol, Link: FlowTypeProtocol, 
     @Published public var path = NavigationPath()
     
     public var canWorkWithLink: Bool {
-        if Link.self == FlowEmptyType.self {
-            return false
-        } else {
-            return true
-        }
+        Link.self != FlowEmptyType.self
     }
+    @available(*, deprecated, renamed: "kvkCancellable")
     public var cancellable = Set<AnyCancellable>()
+    public var kvkCancellable = Set<AnyCancellable>()
+    
     public var kvkParent: (any FlowProtocol)?
     public var pathLinks: [String: Int] = [:]
     public var lastActiveLink: String?
+    open var useNavigationStack: Bool {
+        true
+    }
     
     public init(parent: (any FlowProtocol)? = nil) {
         self.kvkParent = parent
@@ -64,17 +68,17 @@ open class FlowBaseCoordinator<Sheet: FlowTypeProtocol, Link: FlowTypeProtocol, 
     }
     
     // MARK: Public-
-    public func subscribeOnLinks() {
+    open func subscribeOnLinks() {
         $linkType
             .compactMap { $0 }
             .sink { [weak self] link in
                 self?.proxyPushTo(link)
             }
-            .store(in: &cancellable)
+            .store(in: &kvkCancellable)
     }
     
     ///Pops all the views on the stack except the root view.
-    public func popToRoot() {
+    open func popToRoot() {
         if let kvkParent {
             kvkParent.path = NavigationPath()
             kvkParent.pathLinks.removeAll()
@@ -87,7 +91,7 @@ open class FlowBaseCoordinator<Sheet: FlowTypeProtocol, Link: FlowTypeProtocol, 
     }
     
     ///Pops the top view from the navigation stack.
-    public func popView() {
+    open func popView() {
         if let parentPath = kvkParent?.path, !parentPath.isEmpty {
             kvkParent?.path.removeLast()
             if let lastActiveLink = kvkParent?.lastActiveLink {
@@ -108,43 +112,46 @@ open class FlowBaseCoordinator<Sheet: FlowTypeProtocol, Link: FlowTypeProtocol, 
     ///#### Return Value
     ///An array containing the path link IDs that were popped from the stack.
     @discardableResult
-    public func popToView(_ pathID: String) -> [String] {
+    open func popToView(_ pathID: String) -> [String] {
         proxyPopToView(pathID)
     }
     
+    @available(*, deprecated, message: "Please use the `linkType` property instead this function.")
     ///Pushes a view onto the receiver’s stack.
     public func pushTo<T: FlowTypeProtocol>(_ link: T) {
-        if let kvkParent {
-            kvkParent.path.append(link)
-        } else {
-            path.append(link)
-        }
+        proxyPushTo(link)
     }
     
-    public func dismissSheet() {
+    open func dismissSheet() {
         sheetType = nil
     }
     
-    public func dismissCover() {
+    open func dismissCover() {
         coverType = nil
     }
 
     // MARK: Internal-
     func removeObservers() {
-        cancellable.removeAll()
+        kvkCancellable.removeAll()
         pathLinks.removeAll()
     }
     
     // MARK: Private-
-    private func proxyPushTo<L: FlowTypeProtocol>(_ link: L) {
-        pushTo(link)
+    private func proxyPushTo(_ link: some FlowTypeProtocol) {
+        var links: [String: Int]
+        if let kvkParent {
+            kvkParent.path.append(link)
+            links = kvkParent.pathLinks
+        } else {
+            path.append(link)
+            links = pathLinks
+        }
         
         let pathLinkId = link.pathID
-        var links = kvkParent?.pathLinks ?? pathLinks
-        if kvkParent != nil {
-            links[pathLinkId] = kvkParent?.path.count ?? 0
-            kvkParent?.pathLinks = links
-            kvkParent?.lastActiveLink = pathLinkId
+        if let kvkParent {
+            links[pathLinkId] = kvkParent.path.count
+            kvkParent.pathLinks = links
+            kvkParent.lastActiveLink = pathLinkId
         } else {
             links[pathLinkId] = path.count
             pathLinks = links
