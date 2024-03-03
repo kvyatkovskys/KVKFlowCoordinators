@@ -149,7 +149,7 @@ open class FlowBaseCoordinator<Sheet: FlowTypeProtocol,
         
         let pathLinkId = link.pathID
         if let kvkParent {
-            links[pathLinkId] = kvkParent.path.count ?? 0
+            links[pathLinkId] = kvkParent.path.count
             kvkParent.pathLinks = links
             kvkParent.lastActiveLink = pathLinkId
         } else {
