@@ -21,7 +21,7 @@ struct CoordinatorFullSplitView: View {
     }
     
     var body: some View {
-        FlowCoordinatorFullSplitView(sideBarCoordinator: sideBarCoordinator, contentCoordinator: contentCoordinator, detailCoordinator: detailCoordinator) {
+        FlowCoordinatorFullSplitView(sideBarCoordinator, contentCoordinator, detailCoordinator) {
             VStack(spacing: 30) {
                 Button("Open link") {
                     sideBarCoordinator.openLink(.linkSideBar)
@@ -92,7 +92,7 @@ struct CoordinatorSplitView: View {
     }
     
     var body: some View {
-        FlowCoordinatorSplitView(sideBarCoordinator: sideBarCoordinator, detailCoordinator: detailCoordinator) {
+        FlowCoordinatorSplitView(sideBarCoordinator, detailCoordinator) {
             VStack(spacing: 30) {
                 Text("Side Bar")
                 Button("Open Link") {

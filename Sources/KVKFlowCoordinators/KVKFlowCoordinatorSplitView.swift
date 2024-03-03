@@ -18,9 +18,9 @@ public struct FlowCoordinatorFullSplitView<C1, C2, C3, SideBar, Content, Detail>
     private var detail: Detail
     
     public init(columnVisibility: Binding<NavigationSplitViewVisibility?> = .constant(nil),
-                sideBarCoordinator: C1,
-                contentCoordinator: C2,
-                detailCoordinator: C3,
+                _ sideBarCoordinator: C1,
+                _ contentCoordinator: C2,
+                _ detailCoordinator: C3,
                 @ViewBuilder sideBar: () -> SideBar,
                 @ViewBuilder content: () -> Content,
                 @ViewBuilder detail: () -> Detail) {
@@ -82,8 +82,8 @@ public struct FlowCoordinatorSplitView<C1, C3, SideBar, Detail>: View where C1: 
     private var detail: Detail
     
     public init(columnVisibility: Binding<NavigationSplitViewVisibility?> = .constant(nil),
-                sideBarCoordinator: C1,
-                detailCoordinator: C3,
+                _ sideBarCoordinator: C1,
+                _ detailCoordinator: C3,
                 @ViewBuilder sideBar: @escaping () -> SideBar,
                 @ViewBuilder detail: @escaping () -> Detail) {
         _columnVisibility = columnVisibility
