@@ -26,7 +26,9 @@ struct DemoCoordinatorView: View {
                 }
             }
             .navigationTitle("Demo Coordinator")
+#if !os(macOS)
             .navigationBarTitleDisplayMode(.inline)
+#endif
             .navigationDestination(for: DemoFlowCoordinator.LinkType.self) { item in
                 switch item {
                 case .fullSplit:

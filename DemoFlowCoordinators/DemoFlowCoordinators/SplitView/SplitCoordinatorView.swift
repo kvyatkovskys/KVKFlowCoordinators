@@ -12,65 +12,45 @@ struct CoordinatorFullSplitView: View {
     
     @StateObject private var sideBarCoordinator: SplitSideBarCoordinator
     @StateObject private var contentCoordinator: SplitContentCoordinator
-    @StateObject private var detailCoordinator: SplitDetailCoordinator
     
     init(parent: DemoFlowCoordinator? = nil) {
         _sideBarCoordinator = StateObject(wrappedValue: SplitSideBarCoordinator(parent: parent))
         _contentCoordinator = StateObject(wrappedValue: SplitContentCoordinator())
-        _detailCoordinator = StateObject(wrappedValue: SplitDetailCoordinator())
     }
     
     var body: some View {
-        FlowCoordinatorFullSplitView(sideBarCoordinator, contentCoordinator, detailCoordinator) {
-            VStack(spacing: 30) {
-                Button("Open link") {
-                    sideBarCoordinator.openLink(.linkSideBar)
-                }
-                Button("Pop to Root") {
-                    sideBarCoordinator.popToRoot()
-                }
-            }
-            .navigationTitle("Side Bar")
-            .navigationDestination(for: SplitCoordinator.LinkTestType.self) { item in
-                switch item {
-                case .linkSideBar:
-                    VStack(spacing: 30) {
-                        Text("Link View")
-                        Button("Pop View") {
-                            sideBarCoordinator.popView()
+        FlowCoordinatorSplitView(sideBarCoordinator: sideBarCoordinator, contentCoordinator: contentCoordinator, detailCoordinator: sideBarCoordinator.detailCoordinator) {
+            SideBarSplitView(vm: sideBarCoordinator.vm)
+                .navigationDestination(for: SplitCoordinator.LinkTestType.self) { item in
+                    switch item {
+                    case .linkSideBar:
+                        VStack(spacing: 30) {
+                            Text("Link View")
+                            Button("Pop View") {
+                                sideBarCoordinator.popView()
+                            }
                         }
+                    default:
+                        EmptyView()
                     }
-                default:
-                    EmptyView()
                 }
-            }
         } content: {
-            VStack(spacing: 30) {
-                Button("Open sheet") {
-                    contentCoordinator.openSheet(.sheet)
-                }
-            }
-            .navigationTitle("Content")
+            ContentSplitView(coordinator: contentCoordinator)
         } detail: {
-            VStack(spacing: 30) {
-                Button("Open Link") {
-                    detailCoordinator.openLink(.linkDetail)
-                }
-            }
-            .navigationTitle("Detail")
-            .navigationDestination(for: SplitCoordinator.LinkTestType.self) { item in
-                switch item {
-                case .linkDetail:
-                    VStack(spacing: 30) {
-                        Text("Link View")
-                        Button("Pop to View") {
-                            detailCoordinator.popToRoot()
+            DetailSplitView(vm: sideBarCoordinator.detailCoordinator.vm)
+                .navigationDestination(for: SplitCoordinator.LinkTestType.self) { item in
+                    switch item {
+                    case .linkDetail:
+                        VStack(spacing: 30) {
+                            Text("Link View")
+                            Button("Pop to View") {
+                                sideBarCoordinator.detailCoordinator.popView()
+                            }
                         }
+                    default:
+                        EmptyView()
                     }
-                default:
-                    EmptyView()
                 }
-            }
         }
         .sheet(item: $contentCoordinator.sheetType) { item in
             switch item {
@@ -81,59 +61,102 @@ struct CoordinatorFullSplitView: View {
     }
 }
 
+private struct ContentSplitView: View {
+    
+    @ObservedObject var coordinator: SplitContentCoordinator
+    
+    var body: some View {
+        VStack(spacing: 30) {
+            Button("Open sheet") {
+                coordinator.openSheet(.sheet)
+            }
+        }
+        .navigationTitle("Content")
+    }
+}
+
+private struct SideBarSplitView: View {
+    
+    @ObservedObject var vm: SplitSideBarVM
+    
+    var body: some View {
+        VStack(spacing: 30) {
+            List(vm.numbers, id: \.self) { number in
+                Button {
+                    vm.openNumber(number)
+                } label: {
+                    Text("Row number: \(number)")
+                }
+                .tint(vm.selectedNumber == number ? .gray : .black)
+                .buttonStyle(.bordered)
+            }
+            Button("Open link") {
+                vm.openLink(.linkSideBar)
+            }
+            Button("Pop to Root") {
+                vm.popToRoot()
+            }
+        }
+        .navigationTitle("Side Bar")
+    }
+}
+
+private struct DetailSplitView: View {
+    
+    @ObservedObject var vm: SplitDetailVM
+    
+    var body: some View {
+        VStack(spacing: 30) {
+            if let number = vm.selectedNumber {
+                Text("Selected Number: \(number)")
+            }
+            Button("Open Link") {
+                vm.openLink(.linkDetail)
+            }
+        }
+        .navigationTitle("Detail")
+    }
+}
+
 struct CoordinatorSplitView: View {
     
     @StateObject private var sideBarCoordinator: SplitSideBarCoordinator
-    @StateObject private var detailCoordinator: SplitDetailCoordinator
     
     init(parent: DemoFlowCoordinator? = nil) {
         _sideBarCoordinator = StateObject(wrappedValue: SplitSideBarCoordinator(parent: parent))
-        _detailCoordinator = StateObject(wrappedValue: SplitDetailCoordinator())
     }
     
     var body: some View {
-        FlowCoordinatorSplitView(sideBarCoordinator, detailCoordinator) {
-            VStack(spacing: 30) {
-                Text("Side Bar")
-                Button("Open Link") {
-                    sideBarCoordinator.openLink(.linkSideBar)
-                }
-            }
-            .navigationTitle("Side Bar")
-            .navigationDestination(for: SplitCoordinator.LinkTestType.self) { item in
-                switch item {
-                case .linkSideBar:
-                    VStack(spacing: 30) {
-                        Text("Link View")
-                        Button("Pop View") {
-                            sideBarCoordinator.popView()
+        FlowCoordinatorSplitView(sideBarCoordinator: sideBarCoordinator, detailCoordinator: sideBarCoordinator.detailCoordinator) {
+            SideBarSplitView(vm: sideBarCoordinator.vm)
+                .navigationDestination(for: SplitCoordinator.LinkTestType.self) { item in
+                    switch item {
+                    case .linkSideBar:
+                        VStack(spacing: 30) {
+                            Text("Link View")
+                            Button("Pop View") {
+                                sideBarCoordinator.popView()
+                            }
                         }
+                    default:
+                        EmptyView()
                     }
-                default:
-                    EmptyView()
                 }
-            }
         } detail: {
-            VStack(spacing: 30) {
-                Text("detail")
-                Button("Open Link") {
-                    detailCoordinator.openLink(.linkDetail)
-                }
-            }
-            .navigationTitle("Detail")
-            .navigationDestination(for: SplitCoordinator.LinkTestType.self) { item in
-                switch item {
-                case .linkDetail:
-                    VStack(spacing: 30) {
-                        Text("Link View")
-                        Button("Pop to View") {
-                            detailCoordinator.popToRoot()
+            DetailSplitView(vm: sideBarCoordinator.detailCoordinator.vm)
+                .navigationDestination(for: SplitCoordinator.LinkTestType.self) { item in
+                    switch item {
+                    case .linkDetail:
+                        VStack(spacing: 30) {
+                            Text("Link View")
+                            Button("Pop to View") {
+                                sideBarCoordinator.detailCoordinator.popToRoot()
+                            }
                         }
+                    default:
+                        EmptyView()
                     }
-                default:
-                    EmptyView()
                 }
-            }
         }
     }
 }
