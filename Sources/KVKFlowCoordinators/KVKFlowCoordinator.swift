@@ -20,7 +20,6 @@ public protocol FlowProtocol: ObservableObject {
     var pathLinks: [String: Int] { get set }
     var lastActiveLink: String? { get set }
     var canWorkWithLink: Bool { get }
-    var kvkCancellable: Set<AnyCancellable> { get set }
     var kvkParent: (any FlowProtocol)? { get set }
     var useNavigationStack: Bool { get }
     
@@ -28,7 +27,6 @@ public protocol FlowProtocol: ObservableObject {
     func popView()
     @discardableResult
     func popToView(_ pathID: String) -> [String]
-    func subscribeOnLinks()
 }
 
 open class FlowBaseCoordinator<Sheet: FlowTypeProtocol,
@@ -40,15 +38,21 @@ open class FlowBaseCoordinator<Sheet: FlowTypeProtocol,
     public typealias C = Cover
     
     @Published public var sheetType: Sheet?
-    @Published public var linkType: Link?
+    @Published public var linkType: Link? {
+        didSet {
+            if let linkType {
+                proxyPushTo(linkType)
+            }
+        }
+    }
     @Published public var coverType: Cover?
     @Published public var path = NavigationPath()
     
     public var canWorkWithLink: Bool {
         Link.self != FlowEmptyType.self
     }
-    @available(*, deprecated, renamed: "kvkCancellable")
-    public var cancellable = Set<AnyCancellable>()
+    
+    @available(*, deprecated, message: "This property is disabled and not used any more.")
     public var kvkCancellable = Set<AnyCancellable>()
     
     public var kvkParent: (any FlowProtocol)?
@@ -60,7 +64,6 @@ open class FlowBaseCoordinator<Sheet: FlowTypeProtocol,
     
     public init(parent: (any FlowProtocol)? = nil) {
         self.kvkParent = parent
-        subscribeOnLinks()
     }
     
     deinit {
@@ -68,14 +71,8 @@ open class FlowBaseCoordinator<Sheet: FlowTypeProtocol,
     }
     
     // MARK: Public-
-    open func subscribeOnLinks() {
-        $linkType
-            .compactMap { $0 }
-            .sink { [weak self] link in
-                self?.proxyPushTo(link)
-            }
-            .store(in: &kvkCancellable)
-    }
+    @available(swift, obsoleted: 0.2.1, message: "This function is disabled and not used any more.")
+    open func subscribeOnLinks() {}
     
     ///Pops all the views on the stack except the root view.
     open func popToRoot() {
