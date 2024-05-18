@@ -9,10 +9,19 @@ import SwiftUI
 import KVKFlowCoordinators
 
 struct DemoCoordinatorView: View {
-    
     @StateObject private var coordinator = DemoFlowCoordinator()
     
     var body: some View {
+        if UIDevice.current.userInterfaceIdiom != .phone {
+            fullBodyView
+        } else {
+            FlowCoordinatorView(coordinator) {
+                commonView
+            }
+        }
+    }
+    
+    private var fullBodyView: some View {
         FlowCoordinatorView(coordinator) {
             VStack(spacing: 30) {
                 Button("Full Split View") {
@@ -36,10 +45,14 @@ struct DemoCoordinatorView: View {
                 case .split:
                     CoordinatorSplitView(parent: coordinator)
                 case .usual:
-                    ContentCoordinatorView(coordinator: coordinator.commonCoordinator)
+                    commonView
                 }
             }
         }
+    }
+    
+    private var commonView: some View {
+        ContentCoordinatorView(coordinator: coordinator.commonCoordinator)
     }
 }
 
