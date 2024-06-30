@@ -129,7 +129,6 @@ open class FlowBaseCoordinator<Sheet: FlowTypeProtocol,
 
     // MARK: Internal-
     func removeObservers() {
-        kvkCancellable.removeAll()
         pathLinks.removeAll()
     }
     
@@ -189,13 +188,17 @@ open class FlowBaseCoordinator<Sheet: FlowTypeProtocol,
     }
 }
 
-public protocol FlowTypeProtocol: Identifiable, Hashable {
+public protocol FlowTypeProtocol: Identifiable, Hashable, Equatable {
     var pathID: String { get }
 }
 
 public extension FlowTypeProtocol {
     var id: String {
         pathID
+    }
+    
+    static func ==(lhs: any FlowTypeProtocol, rhs: any FlowTypeProtocol) -> Bool {
+        lhs.pathID == rhs.pathID
     }
 }
 
