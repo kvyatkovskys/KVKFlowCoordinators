@@ -9,7 +9,6 @@ import Foundation
 import KVKFlowCoordinators
 
 final class SplitSideBarCoordinator: LinkCoordinator<SplitCoordinator.LinkTestType> {
-    
     @Published var vm: SplitSideBarVM!
     @Published var detailCoordinator = SplitDetailCoordinator()
     private let parent: DemoFlowCoordinator?
@@ -34,7 +33,6 @@ final class SplitSideBarCoordinator: LinkCoordinator<SplitCoordinator.LinkTestTy
 }
 
 final class SplitSideBarVM: ObservableObject {
-    
     let numbers: Range<Int> = 0..<10
     @Published var selectedNumber: Int?
     
@@ -66,7 +64,6 @@ final class SplitContentCoordinator: SheetCoordinator<SplitCoordinator.SheetTest
 }
 
 final class SplitDetailCoordinator: LinkCoordinator<SplitCoordinator.LinkTestType> {
-    
     @Published var vm: SplitDetailVM!
     
     init() {
