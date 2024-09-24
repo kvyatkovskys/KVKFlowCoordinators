@@ -15,6 +15,7 @@ public protocol FlowProtocol: ObservableObject {
     
     var sheetType: S? { get set }
     var linkType: L? { get set }
+    var linksType: [L]? { get set }
     var coverType: C? { get set }
     var path: NavigationPath { get set }
     var pathLinks: [String: Int] { get set }
@@ -42,6 +43,13 @@ open class FlowBaseCoordinator<Sheet: FlowTypeProtocol,
         didSet {
             if let linkType {
                 proxyPushTo(linkType)
+            }
+        }
+    }
+    @Published public var linksType: [Link]? {
+        didSet {
+            if let linksType {
+                linksType.forEach(proxyPushTo)
             }
         }
     }

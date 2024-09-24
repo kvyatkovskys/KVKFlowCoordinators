@@ -33,6 +33,9 @@ struct ContentView: View {
             Button("Open Link") {
                 vm.openFirstLink()
             }
+            Button("Open links") {
+                vm.openLinks()
+            }
             Button("Complex Btn Link") {
                 vm.openComplexLink()
             }

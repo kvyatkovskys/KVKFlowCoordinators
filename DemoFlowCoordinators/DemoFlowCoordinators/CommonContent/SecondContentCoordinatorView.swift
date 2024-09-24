@@ -13,23 +13,22 @@ struct SecondContentCoordinatorView: View {
     @ObservedObject var coordinator: SecondContentCoordinator
     
     var body: some View {
-        FlowCoordinatorView(coordinator) {
-            SecondContentView(vm: coordinator.vm)
-                .sheet(item: $coordinator.sheetType) { item in
-                    switch item {
-                    case .sheet(let title):
-                        SheetView(title: title)
-                    }
+        SecondContentView(vm: coordinator.vm)
+            .flowCoordinator(coordinator)
+            .sheet(item: $coordinator.sheetType) { item in
+                switch item {
+                case .sheet(let title):
+                    SheetView(title: title)
                 }
-                .navigationDestination(for: SecondContentViewModel.SecondDetailLink.self) { (item) in
-                    switch item {
-                    case .detailLink:
-                        DetailNavigationLinkView(coordinator: coordinator)
-                    case .detailLink2:
-                        DetailNavigationLinkView2(coordinator: coordinator)
-                    }
+            }
+            .navigationDestination(for: SecondContentViewModel.SecondDetailLink.self) { (item) in
+                switch item {
+                case .detailLink:
+                    DetailNavigationLinkView(coordinator: coordinator)
+                case .detailLink2:
+                    DetailNavigationLinkView2(coordinator: coordinator)
                 }
-        }
+            }
     }
 }
 

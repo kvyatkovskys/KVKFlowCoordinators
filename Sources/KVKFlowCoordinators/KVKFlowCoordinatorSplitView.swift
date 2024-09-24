@@ -52,27 +52,22 @@ public struct FlowCoordinatorSplitView<C1, C2, C3, SideBar, Content, Detail>: Vi
     private func getSplitViewWith(columnVisibility: Binding<NavigationSplitViewVisibility>) -> some View {
         if Content.self == EmptyView.self {
             NavigationSplitView(columnVisibility: columnVisibility) {
-                FlowCoordinatorView(sideBarCoordinator) {
-                    sideBar
-                }
+                sideBar
+                    .flowCoordinator(sideBarCoordinator)
             } detail: {
-                FlowCoordinatorView(detailCoordinator) {
-                    detail
-                }
+                detail
+                    .flowCoordinator(detailCoordinator)
             }
         } else {
             NavigationSplitView(columnVisibility: columnVisibility) {
-                FlowCoordinatorView(sideBarCoordinator) {
-                    sideBar
-                }
+                sideBar
+                    .flowCoordinator(sideBarCoordinator)
             } content: {
-                FlowCoordinatorView(contentCoordinator) {
-                    content
-                }
+                content
+                    .flowCoordinator(contentCoordinator)
             } detail: {
-                FlowCoordinatorView(detailCoordinator) {
-                    detail
-                }
+                detail
+                    .flowCoordinator(detailCoordinator)
             }
         }
     }
@@ -81,27 +76,22 @@ public struct FlowCoordinatorSplitView<C1, C2, C3, SideBar, Content, Detail>: Vi
     private func getSplitView() -> some View {
         if Content.self == EmptyView.self {
             NavigationSplitView {
-                FlowCoordinatorView(sideBarCoordinator) {
-                    sideBar
-                }
+                sideBar
+                    .flowCoordinator(sideBarCoordinator)
             } detail: {
-                FlowCoordinatorView(detailCoordinator) {
-                    detail
-                }
+                detail
+                    .flowCoordinator(detailCoordinator)
             }
         } else {
             NavigationSplitView {
-                FlowCoordinatorView(sideBarCoordinator) {
-                    sideBar
-                }
+                sideBar
+                    .flowCoordinator(sideBarCoordinator)
             } content: {
-                FlowCoordinatorView(contentCoordinator) {
-                    content
-                }
+                content
+                    .flowCoordinator(contentCoordinator)
             } detail: {
-                FlowCoordinatorView(detailCoordinator) {
-                    detail
-                }
+                detail
+                    .flowCoordinator(detailCoordinator)
             }
         }
     }

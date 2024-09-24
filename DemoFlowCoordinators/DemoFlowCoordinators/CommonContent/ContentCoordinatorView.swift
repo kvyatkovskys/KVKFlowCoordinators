@@ -12,9 +12,8 @@ struct ContentCoordinatorView: View {
     @ObservedObject var coordinator: ContentCoordinator
     
     var body: some View {
-        FlowCoordinatorView(coordinator) {
-            bodyView
-        }
+        bodyView
+            .flowCoordinator(coordinator)
     }
     
     private var bodyView: some View {
