@@ -14,7 +14,7 @@ struct ContentCoordinatorView: View {
     var body: some View {
         bodyView
             .flowCoordinator(coordinator)
-            .flowOpenLink(type: ContentViewModel.LinkType.self) { item in
+            .flowLink(type: ContentViewModel.LinkType.self) { item in
                 switch item {
                 case .linkFirstWithParams(let title),
                         .linkThirdWithParams(let title):

@@ -21,7 +21,7 @@ struct DemoCoordinatorView: View {
                     .flowCoordinator(coordinator)
             }
         }
-        .flowOpenLink(item: $coordinator.linkType) { item in
+        .flowLink(item: $coordinator.linkType) { item in
             switch item {
             case .fullSplit:
                 CoordinatorFullSplitView(parent: coordinator)

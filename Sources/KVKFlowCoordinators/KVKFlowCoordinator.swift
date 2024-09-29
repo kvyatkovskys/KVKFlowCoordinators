@@ -38,31 +38,26 @@ open class FlowBaseCoordinator<Sheet: FlowTypeProtocol,
     public typealias L = Link
     public typealias C = Cover
     
-    @Published public var sheetType: Sheet?
-    @Published public var linkType: Link? {
+    @Published public var sheetType: S?
+    @Published public var linkType: L? {
         didSet {
             if let linkType {
                 proxyPushTo(linkType)
             }
         }
     }
-    @Published public var linksType: [Link]? {
+    @Published public var linksType: [L]? {
         didSet {
             if let linksType {
                 linksType.forEach(proxyPushTo)
             }
         }
     }
-    @Published public var coverType: Cover?
+    @Published public var coverType: C?
     @Published public var path = NavigationPath()
-    
     public var canWorkWithLink: Bool {
-        Link.self != FlowEmptyType.self
+        L.self != FlowEmptyType.self
     }
-    
-    @available(*, deprecated, message: "This property is disabled and not used any more.")
-    public var kvkCancellable = Set<AnyCancellable>()
-    
     public var kvkParent: (any FlowProtocol)?
     public var pathLinks: [String: Int] = [:]
     public var lastActiveLink: String?
@@ -79,9 +74,6 @@ open class FlowBaseCoordinator<Sheet: FlowTypeProtocol,
     }
     
     // MARK: Public-
-    @available(swift, obsoleted: 0.2.1, message: "This function is disabled and not used any more.")
-    open func subscribeOnLinks() {}
-    
     ///Pops all the views on the stack except the root view.
     open func popToRoot() {
         if let kvkParent {
@@ -137,6 +129,10 @@ open class FlowBaseCoordinator<Sheet: FlowTypeProtocol,
 
     // MARK: Internal-
     func removeObservers() {
+        sheetType = nil
+        coverType = nil
+        linkType = nil
+        linksType = nil
         pathLinks.removeAll()
     }
     

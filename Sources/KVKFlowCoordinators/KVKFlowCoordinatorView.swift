@@ -34,7 +34,7 @@ public struct FlowCoordinatorView<T: FlowProtocol, U: View>: View {
 
 public extension View {
     @available(iOS 17.0, *)
-    nonisolated public func flowOpenLink<T, C>(
+    nonisolated public func flowLink<T, C>(
         item: Binding<T?>,
         @ViewBuilder destination: @escaping (T) -> C
     ) -> some View where T: FlowTypeProtocol, C: View {
@@ -43,7 +43,7 @@ public extension View {
         }
     }
     
-    nonisolated public func flowOpenLink<T, C>(
+    nonisolated public func flowLink<T, C>(
         type: T.Type,
         @ViewBuilder destination: @escaping (T) -> C
     ) -> some View where T: FlowTypeProtocol, C: View {
@@ -53,15 +53,15 @@ public extension View {
     }
     
     @ViewBuilder
-    nonisolated public func flowOpenLink<T, C>(
+    nonisolated public func flowLink<T, C>(
         item: Binding<T?> = .constant(nil),
         type: T.Type? = nil,
         @ViewBuilder destination: @escaping (T) -> C
     ) -> some View where T: FlowTypeProtocol, C: View {
         if #available(iOS 17.0, *), type == nil {
-            flowOpenLink(item: item, destination: destination)
+            flowLink(item: item, destination: destination)
         } else if let type {
-            flowOpenLink(type: type, destination: destination)
+            flowLink(type: type, destination: destination)
         } else {
             EmptyView()
         }
