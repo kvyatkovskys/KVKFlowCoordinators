@@ -96,3 +96,63 @@ public struct FlowCoordinatorSplitView<C1, C2, C3, SideBar, Content, Detail>: Vi
         }
     }
 }
+
+private struct CoordinatorModifier<C1, C2, C3, ContentBody, Detail>: ViewModifier where C1: FlowProtocol, C2: FlowProtocol, C3: FlowProtocol, ContentBody: View, Detail: View {
+    @Binding private var columnVisibility: NavigationSplitViewVisibility?
+    @ObservedObject private var sideBarCoordinator: C1
+    @ObservedObject private var contentCoordinator: C2
+    @ObservedObject private var detailCoordinator: C3
+    private var contentBody: ContentBody
+    private var detail: Detail
+    
+    public init(columnVisibility: Binding<NavigationSplitViewVisibility?> = .constant(nil),
+                sideBarCoordinator: C1,
+                contentCoordinator: C2 = EmptyCoordinator(),
+                detailCoordinator: C3,
+                @ViewBuilder contentBody: () -> ContentBody = { EmptyView() },
+                @ViewBuilder detail: () -> Detail) {
+        _columnVisibility = columnVisibility
+        self.sideBarCoordinator = sideBarCoordinator
+        self.contentCoordinator = contentCoordinator
+        self.detailCoordinator = detailCoordinator
+        self.contentBody = contentBody()
+        self.detail = detail()
+    }
+    
+    public func body(content: Content) -> some View {
+        FlowCoordinatorSplitView(
+            columnVisibility: $columnVisibility,
+            sideBarCoordinator: sideBarCoordinator,
+            contentCoordinator: contentCoordinator,
+            detailCoordinator: detailCoordinator
+        ) {
+            content
+        } content: {
+            contentBody
+        } detail: {
+            detail
+        }
+    }
+}
+
+public extension View {
+    func flowSplitCoordinator<C1, C2, C3, Content, Detail>(
+        columnVisibility: Binding<NavigationSplitViewVisibility?> = .constant(nil),
+        sideBarCoordinator: C1,
+        contentCoordinator: C2 = EmptyCoordinator(),
+        detailCoordinator: C3,
+        @ViewBuilder content: () -> Content = { EmptyView() },
+        @ViewBuilder detail: () -> Detail
+    ) -> some View where C1: FlowProtocol, C2: FlowProtocol, C3: FlowProtocol, Content: View, Detail: View {
+        modifier(
+            CoordinatorModifier(
+                columnVisibility: columnVisibility,
+                sideBarCoordinator: sideBarCoordinator,
+                contentCoordinator: contentCoordinator,
+                detailCoordinator: detailCoordinator,
+                contentBody: content,
+                detail: detail
+            )
+        )
+    }
+}

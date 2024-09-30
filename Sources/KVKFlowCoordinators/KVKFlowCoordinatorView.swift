@@ -44,26 +44,11 @@ public extension View {
     }
     
     nonisolated public func flowLink<T, C>(
-        type: T.Type,
+        for type: T.Type,
         @ViewBuilder destination: @escaping (T) -> C
     ) -> some View where T: FlowTypeProtocol, C: View {
         navigationDestination(for: type) { item in
             destination(item)
-        }
-    }
-    
-    @ViewBuilder
-    nonisolated public func flowLink<T, C>(
-        item: Binding<T?> = .constant(nil),
-        type: T.Type? = nil,
-        @ViewBuilder destination: @escaping (T) -> C
-    ) -> some View where T: FlowTypeProtocol, C: View {
-        if #available(iOS 17.0, *), type == nil {
-            flowLink(item: item, destination: destination)
-        } else if let type {
-            flowLink(type: type, destination: destination)
-        } else {
-            EmptyView()
         }
     }
 }

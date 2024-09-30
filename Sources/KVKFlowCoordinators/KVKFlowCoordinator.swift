@@ -38,25 +38,25 @@ open class FlowBaseCoordinator<Sheet: FlowTypeProtocol,
     public typealias L = Link
     public typealias C = Cover
     
-    @Published public var sheetType: S?
-    @Published public var linkType: L? {
+    @Published public var sheetType: Sheet?
+    @Published public var linkType: Link? {
         didSet {
             if let linkType {
                 proxyPushTo(linkType)
             }
         }
     }
-    @Published public var linksType: [L]? {
+    @Published public var linksType: [Link]? {
         didSet {
             if let linksType {
                 linksType.forEach(proxyPushTo)
             }
         }
     }
-    @Published public var coverType: C?
+    @Published public var coverType: Cover?
     @Published public var path = NavigationPath()
     public var canWorkWithLink: Bool {
-        L.self != FlowEmptyType.self
+        Link.self != FlowEmptyType.self
     }
     public var kvkParent: (any FlowProtocol)?
     public var pathLinks: [String: Int] = [:]

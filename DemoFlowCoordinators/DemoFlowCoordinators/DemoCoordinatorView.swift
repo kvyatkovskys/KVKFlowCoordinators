@@ -12,24 +12,11 @@ struct DemoCoordinatorView: View {
     @StateObject private var coordinator = DemoFlowCoordinator()
     
     var body: some View {
-        Group {
-            if UIDevice.current.userInterfaceIdiom != .phone {
-                fullBodyView
-                    .flowCoordinator(coordinator)
-            } else {
-                commonView
-                    .flowCoordinator(coordinator)
-            }
-        }
-        .flowLink(item: $coordinator.linkType) { item in
-            switch item {
-            case .fullSplit:
-                CoordinatorFullSplitView(parent: coordinator)
-            case .split:
-                CoordinatorSplitView(parent: coordinator)
-            case .usual:
-                commonView
-            }
+        if UIDevice.current.userInterfaceIdiom != .phone {
+            CoordinatorFullSplitView()
+        } else {
+            commonView
+                .flowCoordinator(coordinator)
         }
     }
     
@@ -49,6 +36,16 @@ struct DemoCoordinatorView: View {
 #if !os(macOS)
         .navigationBarTitleDisplayMode(.inline)
 #endif
+        .flowLink(for: DemoFlowCoordinator.LinkType.self) { item in
+            switch item {
+            case .fullSplit:
+                CoordinatorFullSplitView(parent: coordinator)
+            case .split:
+                CoordinatorSplitView(parent: coordinator)
+            case .usual:
+                commonView
+            }
+        }
     }
     
     private var commonView: some View {
