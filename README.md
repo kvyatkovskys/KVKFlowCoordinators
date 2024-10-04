@@ -62,6 +62,11 @@ pod 'KVKFlowCoordinators'
   }
   
   var body: some View {
+      content
+         .flowCoordinator(coordinator)
+  }
+  
+  var body: some View {
       FlowCoordinatorSplitView(sideBarCoordinator, detailCoordinator) {
           // side bar content
       } detail: {
@@ -72,7 +77,7 @@ pod 'KVKFlowCoordinators'
 
 To work with _navigation link_ use 
 ```swift
-.navigationDestination(for: NavigationLinkType.self) { (item) in
+.flowLink(for: NavigationLinkType.self) { (item) in
   // content
 }
 // .navigationDestination(item: $item) doesn't work
@@ -115,28 +120,26 @@ struct ContentCoordinatorView: View {
     @StateObject private var coordinator = ContentCoordinator()
     
     var body: some View {
-        FlowCoordinatorView(coordinator) {
-            ContentView(vm: coordinator.vm)
-                .fullScreenCover(item: $coordinator.coverType, content: { (item) in
-                    SheetView(title: "Cover View")
-                })
-                .sheet(item: $coordinator.sheetType) { (item) in
-                    switch item {
-                    case .sheetFirst(let title):
-                        SheetView(title: title)
-                    }
+        ContentView(vm: coordinator.vm)
+            .fullScreenCover(item: $coordinator.coverType) { (item) in
+                SheetView(title: "Cover View")
+            }
+            .sheet(item: $coordinator.sheetType) { (item) in
+                switch item {
+                case .sheetFirst(let title):
+                    SheetView(title: title)
                 }
-                .navigationDestination(for: NavigationLinkType.self) { (item) in
-                    switch item {
-                    case .linkFirstWithParams(let title):
-                        NavigationLinkView(title: title)
-                    case .linkSecond:
-                        NavigationLinkView(title: "Test Second Link")
-                    case .linkSecondCoordinator:
-                        SecondContentCoordinatorView(coordinator: coordinator.secondContentCoordinator)
-                    }
+            }
+            .flowLink(for: NavigationLinkType.self) { (item) in
+                switch item {
+                case .linkFirstWithParams(let title):
+                    NavigationLinkView(title: title)
+                case .linkSecond:
+                    NavigationLinkView(title: "Test Second Link")
+                case .linkSecondCoordinator:
+                    SecondContentCoordinatorView(coordinator: coordinator.secondContentCoordinator)
                 }
-        }
+            }
     }
 }
 
@@ -175,7 +178,6 @@ struct ContentView: View {
             NavigationLink("Open Complex Nav Link",
                            value: ContentViewModel.LinkType.linkSecondCoordinator)
         }
-        .padding()
     }
 }
 ```
