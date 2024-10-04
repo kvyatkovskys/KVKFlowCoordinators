@@ -80,7 +80,11 @@ To work with _navigation link_ use
 .flowLink(for: NavigationLinkType.self) { (item) in
   // content
 }
-// .navigationDestination(item: $item) doesn't work
+```
+###  Doesn't work correctly ❗️
+```swift
+  - .navigationDestination(item: $item)
+  - .flowLink(item: $item)
 ```
 
 ### Navigation Link Features
