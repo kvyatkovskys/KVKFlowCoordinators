@@ -13,40 +13,37 @@ struct DemoCoordinatorView: View {
     
     var body: some View {
         if UIDevice.current.userInterfaceIdiom != .phone {
-            fullBodyView
+            CoordinatorFullSplitView()
         } else {
-            FlowCoordinatorView(coordinator) {
-                commonView
-            }
+            commonView
+                .flowCoordinator(coordinator)
         }
     }
     
     private var fullBodyView: some View {
-        FlowCoordinatorView(coordinator) {
-            VStack(spacing: 30) {
-                Button("Full Split View") {
-                    coordinator.openLink(.fullSplit)
-                }
-                Button("Split View") {
-                    coordinator.openLink(.split)
-                }
-                Button("Common View") {
-                    coordinator.openLink(.usual)
-                }
+        VStack(spacing: 30) {
+            Button("Full Split View") {
+                coordinator.openLink(.fullSplit)
             }
-            .navigationTitle("Demo Coordinator")
+            Button("Split View") {
+                coordinator.openLink(.split)
+            }
+            Button("Common View") {
+                coordinator.openLink(.usual)
+            }
+        }
+        .navigationTitle("Demo Coordinator")
 #if !os(macOS)
-            .navigationBarTitleDisplayMode(.inline)
+        .navigationBarTitleDisplayMode(.inline)
 #endif
-            .navigationDestination(for: DemoFlowCoordinator.LinkType.self) { item in
-                switch item {
-                case .fullSplit:
-                    CoordinatorFullSplitView(parent: coordinator)
-                case .split:
-                    CoordinatorSplitView(parent: coordinator)
-                case .usual:
-                    commonView
-                }
+        .flowLink(for: DemoFlowCoordinator.LinkType.self) { item in
+            switch item {
+            case .fullSplit:
+                CoordinatorFullSplitView(parent: coordinator)
+            case .split:
+                CoordinatorSplitView(parent: coordinator)
+            case .usual:
+                commonView
             }
         }
     }

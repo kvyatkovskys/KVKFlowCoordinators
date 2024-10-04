@@ -12,9 +12,21 @@ struct ContentCoordinatorView: View {
     @ObservedObject var coordinator: ContentCoordinator
     
     var body: some View {
-        FlowCoordinatorView(coordinator) {
-            bodyView
-        }
+        bodyView
+            .flowCoordinator(coordinator)
+            .flowLink(for: ContentViewModel.LinkType.self) { item in
+                switch item {
+                case .linkFirstWithParams(let title),
+                        .linkThirdWithParams(let title):
+                    NavigationLinkView(title: title)
+                case .linkSecond:
+                    NavigationLinkView(title: "Test Second Link")
+                case .linkSecondCoordinator:
+                    SecondContentCoordinatorView(coordinator: coordinator.secondContentCoordinator)
+                case .linkSecondCoordinator2:
+                    SecondContentCoordinatorView(coordinator: coordinator.secondContentCoordinator)
+                }
+            }
     }
     
     private var bodyView: some View {
@@ -28,19 +40,6 @@ struct ContentCoordinatorView: View {
                 switch item {
                 case .sheetFirst(let title):
                     SheetView(title: title)
-                }
-            }
-            .navigationDestination(for: ContentViewModel.LinkType.self) { (item) in
-                switch item {
-                case .linkFirstWithParams(let title),
-                        .linkThirdWithParams(let title):
-                    NavigationLinkView(title: title)
-                case .linkSecond:
-                    NavigationLinkView(title: "Test Second Link")
-                case .linkSecondCoordinator:
-                    SecondContentCoordinatorView(coordinator: coordinator.secondContentCoordinator)
-                case .linkSecondCoordinator2:
-                    SecondContentCoordinatorView(coordinator: coordinator.secondContentCoordinator)
                 }
             }
     }

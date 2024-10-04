@@ -15,6 +15,7 @@ public protocol FlowProtocol: ObservableObject {
     
     var sheetType: S? { get set }
     var linkType: L? { get set }
+    var linksType: [L]? { get set }
     var coverType: C? { get set }
     var path: NavigationPath { get set }
     var pathLinks: [String: Int] { get set }
@@ -45,16 +46,18 @@ open class FlowBaseCoordinator<Sheet: FlowTypeProtocol,
             }
         }
     }
+    @Published public var linksType: [Link]? {
+        didSet {
+            if let linksType {
+                linksType.forEach(proxyPushTo)
+            }
+        }
+    }
     @Published public var coverType: Cover?
     @Published public var path = NavigationPath()
-    
     public var canWorkWithLink: Bool {
         Link.self != FlowEmptyType.self
     }
-    
-    @available(*, deprecated, message: "This property is disabled and not used any more.")
-    public var kvkCancellable = Set<AnyCancellable>()
-    
     public var kvkParent: (any FlowProtocol)?
     public var pathLinks: [String: Int] = [:]
     public var lastActiveLink: String?
@@ -71,9 +74,6 @@ open class FlowBaseCoordinator<Sheet: FlowTypeProtocol,
     }
     
     // MARK: Public-
-    @available(swift, obsoleted: 0.2.1, message: "This function is disabled and not used any more.")
-    open func subscribeOnLinks() {}
-    
     ///Pops all the views on the stack except the root view.
     open func popToRoot() {
         if let kvkParent {
@@ -129,6 +129,10 @@ open class FlowBaseCoordinator<Sheet: FlowTypeProtocol,
 
     // MARK: Internal-
     func removeObservers() {
+        sheetType = nil
+        coverType = nil
+        linkType = nil
+        linksType = nil
         pathLinks.removeAll()
     }
     
