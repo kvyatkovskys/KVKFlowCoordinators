@@ -33,7 +33,7 @@ public struct FlowCoordinatorView<T: FlowProtocol, U: View>: View {
 }
 
 public extension View {
-    @available(iOS 17.0, *)
+    @available(iOS 17.0, macOS 14.0, *)
     nonisolated public func flowLink<T, C>(
         item: Binding<T?>,
         @ViewBuilder destination: @escaping (T) -> C
