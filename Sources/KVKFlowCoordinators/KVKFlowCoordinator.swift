@@ -201,7 +201,7 @@ public extension FlowTypeProtocol {
         pathID
     }
     
-    static func ==(lhs: any FlowTypeProtocol, rhs: any FlowTypeProtocol) -> Bool {
+    static func ==(lhs: Self, rhs: Self) -> Bool {
         lhs.pathID == rhs.pathID
     }
 }
