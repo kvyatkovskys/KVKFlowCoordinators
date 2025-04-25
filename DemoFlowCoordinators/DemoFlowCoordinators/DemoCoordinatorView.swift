@@ -12,12 +12,17 @@ struct DemoCoordinatorView: View {
     @StateObject private var coordinator = DemoFlowCoordinator()
     
     var body: some View {
+#if os(macOS)
+        commonView
+            .flowCoordinator(coordinator)
+#else
         if UIDevice.current.userInterfaceIdiom != .phone {
             CoordinatorFullSplitView()
         } else {
             commonView
                 .flowCoordinator(coordinator)
         }
+#endif
     }
     
     private var fullBodyView: some View {
